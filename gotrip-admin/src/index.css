@@ -1,0 +1,113 @@
+/* ===========================
+   GLOBAL THEME VARIABLES
+=========================== */
+:root {
+  --primary: #1D4F44;
+  --primary-light: #276a5b;
+  --primary-dark: #13352f;
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: #213547;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* DARK MODE */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #ffffff;
+    background-color: #0f1917; /* Dark greenish tone */
+  }
+
+  button {
+    background-color: var(--primary-dark);
+  }
+
+  a:hover {
+    color: var(--primary-light);
+  }
+}
+
+/* ===========================
+   BASE ELEMENTS
+=========================== */
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: var(--primary);
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+button {
+  border-radius: 8px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+button:hover {
+  background-color: var(--primary-dark);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 3px solid var(--primary-light);
+}
+
+/* ===========================
+   OPTIONAL (gunakan jika butuh)
+=========================== */
+
+/*
+.card {
+  border: 1px solid var(--primary);
+}
+
+.sidebar {
+  background-color: var(--primary);
+  color: white;
+}
+
+.navbar {
+  background-color: var(--primary);
+  color: white;
+}
+*/

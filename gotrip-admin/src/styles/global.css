@@ -1,0 +1,589 @@
+/* ===========================
+   THEME VARIABLES
+=========================== */
+:root {
+  --primary: #1d4f44; /* utama (sesuai permintaan) */
+  --primary-2: #276a5b; /* variasi terang */
+  --primary-3: #13352f; /* variasi gelap */
+  --accent: #2980b9;
+  --bg: #f4f8f5;
+  --surface: #ffffff;
+  --muted: #707070;
+  --radius: 8px;
+
+  font-family: Inter, system-ui, Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  color: #16322b;
+  background: var(--bg);
+}
+
+/* ===========================
+   GLOBAL RESET & BOX-SIZING
+=========================== */
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===========================
+   LAYOUT
+=========================== */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: linear-gradient(90deg, #1e824c, #145d34);
+  color: #fff;
+  padding: 20px;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: width 200ms ease;
+}
+
+/* collapsed sidebar (for mobile — toggled in JS if you add it) */
+.sidebar.collapsed {
+  width: 72px;
+}
+
+/* Sidebar heading / brand */
+.sidebar h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.4px;
+  color: #fff;
+}
+
+/* Nav inside sidebar */
+.sidebar-nav {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 160ms, color 160ms, transform 120ms;
+}
+
+/* hover */
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(4px);
+}
+
+/* active */
+.sidebar-link.active {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(19, 53, 47, 0.08);
+}
+
+/* ===========================
+   MAIN AREA
+=========================== */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* NAVBAR */
+.navbar {
+  height: 64px;
+  background: linear-gradient(90deg, #1e824c, #145d34);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Logout button */
+.logout-btn {
+  background: #ffffff;
+  color: var(--primary);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 120ms, background 120ms;
+}
+.logout-btn:hover {
+  transform: translateY(-2px);
+  background: #f5f5f5;
+}
+
+/* ===========================
+   CONTENT AREA
+=========================== */
+.content {
+  padding: 20px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+/* Headings */
+h1 {
+  margin: 0 0 14px 0;
+  font-size: 28px;
+  color: var(--primary-3);
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  padding: 18px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(22, 50, 43, 0.06);
+  box-shadow: 0 4px 14px rgba(16, 32, 28, 0.03);
+}
+
+/* small summary cards grid */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+.card.small {
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ===========================
+   LOGIN / CENTRE PAGES
+=========================== */
+.page-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(30, 130, 76, 0.04), transparent);
+}
+
+.login-card {
+  width: 360px;
+  max-width: 95%;
+  background: var(--surface);
+  padding: 22px;
+  border-radius: 12px;
+  border-left: 6px solid var(--primary);
+  box-shadow: 0 10px 30px rgba(16, 32, 28, 0.06);
+}
+
+.login-card h2 {
+  margin-top: 0;
+  color: var(--primary-3);
+}
+.login-card label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.login-card input[type="email"],
+.login-card input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(16, 32, 28, 0.08);
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+/* Login button */
+.login-card button {
+  width: 100%;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+.login-card button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Alert */
+.alert {
+  background: #ffefef;
+  color: #7a1b1b;
+  padding: 10px;
+  border-left: 4px solid #e05a5a;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+/* ===========================
+   TABLES / LIST (example)
+=========================== */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+.table th,
+.table td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+.table th {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 1024px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sidebar {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    padding: 10px;
+    overflow-x: auto;
+    border-right: none;
+  }
+  .sidebar h2 {
+    display: none;
+  } /* hide brand on small screens */
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 8px;
+  }
+  .main {
+    width: 100%;
+  }
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .navbar {
+    height: 56px;
+    padding: 0 12px;
+  }
+  .content {
+    padding: 12px;
+    margin: 12px;
+  }
+}
+
+/* Small utility */
+.text-muted {
+  color: var(--muted);
+  font-size: 0.95em;
+}
+.mt-8 {
+  margin-top: 8px;
+}
+
+/* ===========================
+   DASHBOARD ADDITIONS
+=========================== */
+
+/* Large card (for charts/tables) */
+.card.large {
+  /* Memberi sedikit penekanan pada kartu besar */
+  padding: 25px;
+  box-shadow: 0 6px 20px rgba(16, 32, 28, 0.05);
+  display: flex; /* Untuk menata h2 dan chart */
+  flex-direction: column;
+}
+
+.card.large h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.25em; /* Ukuran sedikit lebih kecil dari h1 */
+  color: var(--primary-2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 10px;
+}
+
+/* Status Pending Card (for visual emphasis) */
+.card.small.status-pending {
+  background: #fff8eb; /* Latar belakang kuning muda */
+  color: #a06e00; /* Warna teks kuning tua */
+  border-left: 4px solid #f39c12; /* Border kiri oranye/kuning */
+}
+
+/* Ensure the chart grid handles responsiveness */
+@media (max-width: 1024px) {
+  /* Atur agar grid chart menjadi kolom tunggal di layar sedang/kecil */
+  .content > div[style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ============================
+   TABLE BOOKING
+============================= */
+
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.booking-table th {
+  background: linear-gradient(90deg, #0b8a32, #3cc166);
+  color: #fff;
+  padding: 14px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.booking-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e6e6e6;
+  font-size: 14px;
+  color: #333;
+}
+
+.booking-table tr:hover {
+  background: #f4fff5;
+}
+
+/* ============================
+   STATUS BADGES
+============================= */
+
+.status-label {
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  display: inline-block;
+}
+
+.status-menunggu-konfirmasi {
+  background: #f39c12;
+}
+
+.status-terbayar {
+  background: #2ecc71;
+}
+
+.status-ditolak {
+  background: #e74c3c;
+}
+
+/* ============================
+   BUTTON STYLE
+============================= */
+
+.btn-view,
+.btn-detail {
+  background: #0b8a32;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-view:hover,
+.btn-detail:hover {
+  background: #066424;
+}
+
+/* ============================
+   MODAL
+============================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+.modal-box {
+  background: white;
+  width: 430px;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.26);
+}
+
+.modal-box h3 {
+  margin: 0 0 15px 0;
+  color: #0b8a32;
+  text-align: center;
+}
+
+/* ============================
+   IMAGE / BUKTI PEMBAYARAN
+============================= */
+
+.proof-image {
+  width: 100%;
+  border-radius: 10px;
+  margin: 12px 0;
+  border: 1px solid #ddd;
+}
+
+/* ============================
+   REJECT NOTE
+============================= */
+
+.reject-textarea {
+  width: 100%;
+  height: 85px;
+  resize: none;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.reject-textarea:focus {
+  border-color: #0b8a32;
+}
+
+/* ============================
+   MODAL BUTTON GROUP
+============================= */
+
+.modal-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-accept {
+  background: #2ecc71;
+  border: none;
+  padding: 10px 16px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-accept:hover {
+  background: #25a65a;
+}
+
+.btn-reject {
+  background: #e74c3c;
+  border: none;
+  padding: 10px 16px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-reject:hover {
+  background: #c0392b;
+}
+
+.btn-cancel {
+  background: #bdc3c7;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: #a6abad;
+}
+
+/* ============================
+   PAGE WRAPPER
+============================= */
+
+.content-wrapper {
+  padding: 20px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #0b8a32;
+}
+
+/* ============================
+   PAGE TABLE USER
+============================= */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.data-table th {
+  background: #f4f4f4;
+  text-align: left;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #0f9d58;
+}
