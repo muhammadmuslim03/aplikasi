@@ -10,4 +10,13 @@ class NewsModel {
     required this.date,
     required this.imageUrl,
   });
+
+  factory NewsModel.fromJson(Map<String, dynamic> json) {
+    return NewsModel(
+      title: json['title'] ?? '',
+      content: json['content'] ?? '',
+      date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
+      imageUrl: json['image_url'] ?? '',
+    );
+  }
 }

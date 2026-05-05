@@ -2,20 +2,30 @@ package models
 
 import "time"
 
-// === USER (Database Model) ===
 type User struct {
-    ID        uint      `gorm:"primaryKey" json:"id"`
-    Username  string    `gorm:"not null" json:"username"`
-    Email     string    `gorm:"unique;not null" json:"email"`
-    Password  string    `gorm:"not null" json:"-"`
-    Role      string    `gorm:"type:varchar(20);default:'pendaki'" json:"role"`
-    CreatedAt time.Time `json:"created_at"`
+	ID         uint       `json:"id" gorm:"primaryKey"`
+	Name       string     `json:"name"`
+	Email      string     `json:"email" gorm:"unique"`
+	Password   string     `json:"-"`
+	Phone      string     `json:"phone"`
+	NIK        string     `json:"nik" gorm:"unique"`
+	Role       string     `json:"role" gorm:"type:varchar(20);default:'pendaki'"`
+	CheckIn    bool       `json:"check_in" gorm:"default:false"`
+	CheckOut   bool       `json:"check_out" gorm:"default:false"`
+	CheckInAt  *time.Time `json:"check_in_at"`
+	CheckOutAt *time.Time `json:"check_out_at"`
+	CreatedAt  time.Time  `json:"created_at"`
 }
 
-// === USER RESPONSE (Data User yang Aman untuk ditampilkan) ===
 type UserResponse struct {
-    ID       uint   `json:"id"`
-    Username string `json:"username"`
-    Email    string `json:"email"`
-    Role     string `json:"role"`
+	ID         uint       `json:"id"`
+	Name       string     `json:"name"`
+	Email      string     `json:"email"`
+	Phone      string     `json:"phone"`
+	NIK        string     `json:"nik"`
+	Role       string     `json:"role"`
+	CheckIn    bool       `json:"check_in"`
+	CheckOut   bool       `json:"check_out"`
+	CheckInAt  *time.Time `json:"check_in_at"`
+	CheckOutAt *time.Time `json:"check_out_at"`
 }

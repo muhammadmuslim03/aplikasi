@@ -2,8 +2,9 @@ package export
 
 import (
 	"encoding/csv"
+	"fmt"
+	"net/http"
 	"os"
-	"strconv"
 
 	"gotrip-backend/config"
 	"gotrip-backend/models"
@@ -11,11 +12,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// ExportCSV untuk Admin
 func ExportCSV(c *gin.Context) {
-	file, err := os.Create("booking-export.csv")
+	filePath := "booking-export.csv"
+
+	file, err := os.Create(filePath)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "Gagal membuat file"})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Gagal membuat file CSV",
+		})
 		return
 	}
 	defer file.Close()
@@ -23,23 +27,71 @@ func ExportCSV(c *gin.Context) {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	writer.Write([]string{
-		"ID", "Nama", "Email", "Tanggal", "Total Harga", "Status",
-	})
-
-	var bookings []models.Booking
-	config.DB.Find(&bookings)
-
-	for _, b := range bookings {
-		writer.Write([]string{
-			strconv.Itoa(int(b.ID)),
-			b.Nama,
-			b.Email,
-			b.Tanggal.Format("2006-01-02"),
-			strconv.Itoa(b.TotalHarga),
-			b.Status,
+	// HEADER
+	if err := writer.Write([]string{
+		"ID",
+		"User ID",
+		"Route ID",
+		"Booking Date",
+		"Hiking Date",
+		"Total Members",
+		"Total Price",
+		"Status",
+	}); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Gagal menulis header CSV",
 		})
+		return
 	}
 
-	c.File("booking-export.csv")
+	var bookings []models.Booking
+
+	if err := config.DB.Find(&bookings).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Gagal mengambil data booking",
+		})
+		return
+	}
+
+	// DATA
+	for _, booking := range bookings {
+
+		bookingDate := ""
+		hikingDate := ""
+
+		if !booking.BookingDate.IsZero() {
+			bookingDate = booking.BookingDate.Format("2006-01-02")
+		}
+
+		if !booking.HikingDate.IsZero() {
+			hikingDate = booking.HikingDate.Format("2006-01-02")
+		}
+
+		row := []string{
+			booking.ID,
+			fmt.Sprintf("%d", booking.UserID),
+			fmt.Sprintf("%d", booking.RouteID),
+			bookingDate,
+			hikingDate,
+			fmt.Sprintf("%d", booking.TotalMembers),
+			fmt.Sprintf("%.0f", booking.TotalPrice),
+			booking.Status,
+		}
+
+		if err := writer.Write(row); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Gagal menulis data CSV",
+			})
+			return
+		}
+	}
+
+	writer.Flush()
+
+	// Kirim file ke client
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Disposition", "attachment; filename="+filePath)
+	c.Header("Content-Type", "text/csv")
+
+	c.File(filePath)
 }

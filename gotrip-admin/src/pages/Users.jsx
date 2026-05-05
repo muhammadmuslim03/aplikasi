@@ -1,150 +1,238 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import AdminLayout from "../components/AdminLayout";
+import api, { getApiErrorMessage } from "../api/api";
 
-const API_BASE_URL = "http://localhost:8080";
+const formatDate = (dateString) => {
+  if (!dateString) return "-";
 
-const getAuthToken = () => {
-  return localStorage.getItem("authToken");
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
 };
+
+const formatDateTime = (dateString) => {
+  if (!dateString) return "-";
+
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+
+const getUserId = (user) => user?.id ?? user?.ID;
+const getUserName = (user) => user?.name || user?.Name || "-";
+const getUserEmail = (user) => user?.email || user?.Email || "-";
+const getUserPhone = (user) => user?.phone || user?.Phone || "-";
+const getUserNik = (user) => user?.nik || user?.NIK || "-";
+const getUserRole = (user) => user?.role || user?.Role || "-";
+const getUserCreatedAt = (user) => user?.created_at ?? user?.CreatedAt;
+const getUserCheckIn = (user) => user?.check_in ?? user?.CheckIn ?? false;
+const getUserCheckOut = (user) => user?.check_out ?? user?.CheckOut ?? false;
+const getUserCheckInAt = (user) => user?.check_in_at ?? user?.CheckInAt;
+const getUserCheckOutAt = (user) => user?.check_out_at ?? user?.CheckOutAt;
+
+function StatusText({ active }) {
+  return (
+    <span className={`status-badge ${active ? "status-success" : "status-muted"}`}>
+      {active ? "Ya" : "Belum"}
+    </span>
+  );
+}
 
 export default function Users() {
   const [pendaki, setPendaki] = useState([]);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
+  const [notice, setNotice] = useState("");
 
-  const fetchPendaki = async () => {
+  const fetchPendaki = useCallback(async () => {
     setLoading(true);
-    const token = getAuthToken();
-
-    const url =
-      search.trim() === ""
-        ? `${API_BASE_URL}/api/web-admin/pendaki`
-        : `${API_BASE_URL}/api/web-admin/pendaki?search=${search}`;
+    setError("");
 
     try {
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await api.get("/api/web-admin/pendaki", {
+        params: debouncedSearch.trim()
+          ? { search: debouncedSearch.trim() }
+          : undefined,
       });
 
-      const data = await response.json();
-      setPendaki(data.data || []);
+      setPendaki(Array.isArray(response.data?.data) ? response.data.data : []);
     } catch (error) {
-      console.error("Error fetching pendaki:", error);
+      setError(getApiErrorMessage(error, "Gagal memuat data pendaki"));
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
-  };
+  }, [debouncedSearch]);
 
   const deletePendaki = async (id) => {
+    if (!id) {
+      setError("ID pendaki tidak ditemukan dari respons server");
+      return;
+    }
+
     if (!window.confirm("Yakin ingin menghapus pendaki ini?")) return;
 
-    const token = getAuthToken();
-
+    setDeletingId(id);
+    setNotice("");
+    setError("");
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/web-admin/pendaki/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        alert("Pendaki berhasil dihapus");
-        fetchPendaki();
-      } else {
-        alert("Gagal menghapus pendaki");
-      }
+      await api.delete(`/api/web-admin/pendaki/${id}`);
+      setNotice("Pendaki berhasil dihapus");
+      await fetchPendaki();
     } catch (error) {
-      console.error("Delete error:", error);
+      setError(getApiErrorMessage(error, "Gagal menghapus pendaki"));
+    } finally {
+      setDeletingId(null);
     }
   };
 
   useEffect(() => {
-    fetchPendaki();
+    const timer = window.setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+
+    return () => window.clearTimeout(timer);
   }, [search]);
 
+  useEffect(() => {
+    fetchPendaki();
+  }, [fetchPendaki]);
+
+  const totalPhone = useMemo(
+    () => pendaki.filter((item) => getUserPhone(item) !== "-").length,
+    [pendaki]
+  );
+
+  const totalCheckedIn = useMemo(
+    () => pendaki.filter((item) => getUserCheckIn(item)).length,
+    [pendaki]
+  );
+
   return (
-    <div className="app-layout">
-      <Sidebar />
+    <AdminLayout
+      title="Pendaki"
+      subtitle="Data akun pendaki yang terdaftar di aplikasi."
+      actions={
+        <button className="btn btn-secondary" onClick={fetchPendaki}>
+          Refresh
+        </button>
+      }
+    >
+      {error && (
+        <div className="alert alert-danger">
+          <span>{error}</span>
+          <button className="btn btn-text" onClick={fetchPendaki}>
+            Coba lagi
+          </button>
+        </div>
+      )}
 
-      <main className="main">
-        <Navbar />
+      {notice && <div className="alert alert-success">{notice}</div>}
 
-        <section className="content">
-          <h1>Daftar Pendaki</h1>
+      <div className="summary-grid users-summary">
+        <div className="stat-card">
+          <span>Total Pendaki</span>
+          <strong>{pendaki.length}</strong>
+          <small>Hasil sesuai pencarian</small>
+        </div>
+        <div className="stat-card stat-card-hikers">
+          <span>Kontak Tersedia</span>
+          <strong>{totalPhone}</strong>
+          <small>Nomor telepon terisi</small>
+        </div>
+        <div className="stat-card stat-card-active">
+          <span>Sedang Check-in</span>
+          <strong>{totalCheckedIn}</strong>
+          <small>Status dari scan barcode</small>
+        </div>
+      </div>
 
-          <div
-            className="card"
-            style={{ marginBottom: "20px", display: "flex", gap: "10px" }}
-          >
-            <input
-              type="text"
-              placeholder="Cari pendaki berdasarkan nama atau email..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="search-input"
-              style={{
-                flex: 1,
-                padding: "10px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-              }}
-            />
-          </div>
+      <div className="toolbar">
+        <input
+          type="search"
+          placeholder="Cari nama atau email..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="search-input"
+        />
+      </div>
 
-          <div className="card">
-            {loading ? (
-              <p>Memuat data...</p>
-            ) : pendaki.length === 0 ? (
-              <p>Tidak ada data pendaki.</p>
-            ) : (
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Tanggal Daftar</th>
-                    <th>Aksi</th>
+      <div className="card table-card">
+        {loading ? (
+          <div className="empty-state">Memuat pendaki...</div>
+        ) : pendaki.length === 0 ? (
+          <div className="empty-state">Tidak ada data pendaki</div>
+        ) : (
+          <div className="table-responsive">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nama</th>
+                  <th>Email</th>
+                  <th>Telepon</th>
+                  <th>NIK</th>
+                  <th>Check-in</th>
+                  <th>Check-out</th>
+                  <th>Daftar</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {pendaki.map((item) => (
+                  <tr key={getUserId(item)}>
+                    <td className="mono">{getUserId(item)}</td>
+                    <td>
+                      <strong>{getUserName(item)}</strong>
+                      <span className="table-subtext">{getUserRole(item)}</span>
+                    </td>
+                    <td>{getUserEmail(item)}</td>
+                    <td>{getUserPhone(item)}</td>
+                    <td className="mono">{getUserNik(item)}</td>
+                    <td>
+                      <StatusText active={getUserCheckIn(item)} />
+                      <span className="table-subtext">
+                        {formatDateTime(getUserCheckInAt(item))}
+                      </span>
+                    </td>
+                    <td>
+                      <StatusText active={getUserCheckOut(item)} />
+                      <span className="table-subtext">
+                        {formatDateTime(getUserCheckOutAt(item))}
+                      </span>
+                    </td>
+                    <td>{formatDate(getUserCreatedAt(item))}</td>
+                    <td>
+                      <button
+                        onClick={() => deletePendaki(getUserId(item))}
+                        className="btn btn-danger btn-sm"
+                        disabled={deletingId === getUserId(item)}
+                      >
+                        {deletingId === getUserId(item) ? "Menghapus..." : "Hapus"}
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-
-                <tbody>
-                  {pendaki.map((item) => (
-                    <tr key={item.id}>
-                      <td>{item.id}</td>
-                      <td>{item.username}</td>
-                      <td>{item.email}</td>
-                      <td>
-                        {new Date(item.created_at).toLocaleDateString("id-ID")}
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => deletePendaki(item.id)}
-                          style={{
-                            background: "red",
-                            padding: "6px 12px",
-                            borderRadius: "6px",
-                            color: "white",
-                            border: "none",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Hapus
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+                ))}
+              </tbody>
+            </table>
           </div>
-        </section>
-      </main>
-    </div>
+        )}
+      </div>
+    </AdminLayout>
   );
 }

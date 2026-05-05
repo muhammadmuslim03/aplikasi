@@ -1,83 +1,60 @@
 class PaymentModel {
-  final String name;
-  final String email;
-  final String telepon;
-  final String? darurat;
-  final DateTime date;
-  final int jumlahOrang;
-  final int jumlahOjek;
-  final bool termasukOjek;
-  final double? total;
+  final String ticketId;  
+  final int routeId;        
+  final String routeName; 
+  final DateTime hikingDate;
+  final int totalMembers; 
+  final double totalPrice;     
+  final bool includeOjek;
+  final int ojekCount;
   final String? proofImagePath;
 
   PaymentModel({
-    this.name = "",
-    this.email = "",
-    this.telepon = "",
-    this.darurat,
-    required this.date, 
-    this.jumlahOrang = 1,
-    this.jumlahOjek = 0,
-    this.termasukOjek = false,
-    this.total,
+    required this.ticketId,
+    required this.routeId,
+    required this.routeName,
+    required this.hikingDate,
+    required this.totalMembers,
+    required this.totalPrice,
+    this.includeOjek = false,
+    this.ojekCount = 0,
     this.proofImagePath,
   });
 
   PaymentModel copyWith({
-    String? name,
-    String? email,
-    String? telepon,
-    String? darurat,
-    DateTime? date,
-    int? jumlahOrang,
-    int? jumlahOjek,
-    bool? termasukOjek,
-    double? total,
+    String? ticketId,
+    int? routeId,
+    String? routeName,
+    DateTime? hikingDate,
+    int? totalMembers,
+    double? totalPrice,
+    bool? includeOjek,
+    int? ojekCount,
     String? proofImagePath,
   }) {
     return PaymentModel(
-      name: name ?? this.name,
-      email: email ?? this.email,
-      telepon: telepon ?? this.telepon,
-      darurat: darurat ?? this.darurat,
-      date: date ?? this.date,
-      jumlahOrang: jumlahOrang ?? this.jumlahOrang,
-      jumlahOjek: jumlahOjek ?? this.jumlahOjek,
-      termasukOjek: termasukOjek ?? this.termasukOjek,
-      total: total ?? this.total,
+      ticketId: ticketId ?? this.ticketId,
+      routeId: routeId ?? this.routeId,
+      routeName: routeName ?? this.routeName,
+      hikingDate: hikingDate ?? this.hikingDate,
+      totalMembers: totalMembers ?? this.totalMembers,
+      totalPrice: totalPrice ?? this.totalPrice,
+      includeOjek: includeOjek ?? this.includeOjek,
+      ojekCount: ojekCount ?? this.ojekCount,
       proofImagePath: proofImagePath ?? this.proofImagePath,
     );
   }
 
   factory PaymentModel.fromJson(Map<String, dynamic> json) {
     return PaymentModel(
-      name: json["name"] ?? "",
-      email: json["email"] ?? "",
-      telepon: json["telepon"] ?? "",
-      darurat: json["darurat"],
-      date: (json["tanggal"] != null) ? DateTime.parse(json["tanggal"]) : DateTime.now(), 
-      jumlahOrang: json["jumlah_orang"] ?? 1,
-      jumlahOjek: json["jumlah_ojek"] ?? 0,
-      termasukOjek: json["termasuk_ojek"] ?? false,
-      total: (json["total_harga"] != null)
-          ? double.tryParse(json["total_harga"].toString())
-          : null,
-      proofImagePath: json["proof_image"],
+      ticketId: json['id'] ?? '',
+      routeId: json['route_id'] ?? 0,
+      routeName: json['route_name'] ?? '',
+      hikingDate: DateTime.tryParse(json['hiking_date'] ?? '') ?? DateTime.now(),
+      totalMembers: json['total_members'] ?? 1,
+      totalPrice: (json['total_price'] ?? 0).toDouble(),
+      includeOjek: json['include_ojek'] ?? false,
+      ojekCount: json['ojek_count'] ?? 0,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "name": name,
-      "email": email,
-      "telepon": telepon,
-      "darurat": darurat,
-      "tanggal": date.toIso8601String(), 
-      "jumlah_orang": jumlahOrang,
-      "jumlah_ojek": jumlahOjek,
-      "termasuk_ojek": termasukOjek,
-      "total_harga": total,
-      "proof_image": proofImagePath,
-    };
   }
 }

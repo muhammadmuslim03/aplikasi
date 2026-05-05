@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -13,6 +14,7 @@ var jwtSecret = []byte("your-secret-key-go-trip-2025")
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		auth := c.GetHeader("Authorization")
+
 		if auth == "" || !strings.HasPrefix(auth, "Bearer ") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token diperlukan"})
 			c.Abort()
@@ -20,7 +22,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		tokenStr := strings.TrimPrefix(auth, "Bearer ")
+
 		token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
+			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method")
+			}
 			return jwtSecret, nil
 		})
 
@@ -34,6 +40,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		c.Set("user_id", uint(claims["user_id"].(float64)))
 		c.Set("role", claims["role"].(string))
+
 		c.Next()
 	}
 }

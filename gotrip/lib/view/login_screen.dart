@@ -11,65 +11,125 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final controller = Get.put(LoginController());
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  // Controller di-put di sini agar lifecycle terikat ke screen ini
+  final LoginController controller = Get.put(LoginController());
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   bool obscurePassword = true;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
+          // Background image
           Positioned.fill(
-            child: Image.asset("assets/background.jpg", fit: BoxFit.cover),
+            child: Image.asset(
+              'assets/background.jpg',
+              fit: BoxFit.cover,
+            ),
           ),
+
+          // Overlay gelap tipis agar form lebih terbaca
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.25),
+            ),
+          ),
+
+          // Konten utama
           Align(
             alignment: Alignment.center,
             child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 40),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset("assets/logo1.png", width: 180, height: 180),
+                  // Logo aplikasi
+                  Image.asset(
+                    'assets/logo1.png',
+                    width: 150,
+                    height: 150,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Card form login
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.all(24),
+                    margin: const EdgeInsets.symmetric(horizontal: 24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withOpacity(0.95),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
+                          blurRadius: 12,
+                          offset: Offset(0, 6),
                         ),
                       ],
                     ),
                     child: Form(
                       key: formKey,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Judul
+                          const Text(
+                            'Masuk',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1D4F44),
+                            ),
+                          ),
+                          const Text(
+                            'Selamat datang kembali, pendaki!',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Field Email
                           TextFormField(
                             controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
                             decoration: const InputDecoration(
-                              labelText: "Email",
+                              labelText: 'Email',
                               border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.email),
+                              prefixIcon: Icon(Icons.email_outlined),
                             ),
-                            validator: (value) =>
-                                value!.isEmpty ? "Tidak boleh kosong" : null,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Email tidak boleh kosong';
+                              }
+                              if (!GetUtils.isEmail(value)) {
+                                return 'Format email tidak valid';
+                              }
+                              return null;
+                            },
                             onChanged: (val) => controller.email.value = val,
                           ),
                           const SizedBox(height: 16),
-                          TextFormField(
+
+                           TextFormField(
                             controller: passwordController,
+                            obscureText: obscurePassword,
                             decoration: InputDecoration(
-                              labelText: "Kata Sandi",
+                              labelText: 'Kata Sandi',
                               border: const OutlineInputBorder(),
-                              prefixIcon: const Icon(Icons.lock),
+                              prefixIcon: const Icon(Icons.lock_outline),
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   obscurePassword
@@ -81,26 +141,33 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }),
                               ),
                             ),
-                            validator: (value) => value!.isEmpty
-                                ? "Password tidak boleh kosong"
-                                : null,
-                            obscureText: obscurePassword,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Password tidak boleh kosong';
+                              }
+                              if (value.length < 6) {
+                                return 'Password minimal 6 karakter';
+                              }
+                              return null;
+                            },
                             onChanged: (val) => controller.password.value = val,
                           ),
-                          const SizedBox(height: 8),
+
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
                               onPressed: controller.forgotPassword,
                               child: const Text(
-                                "Lupa Password?",
+                                'Lupa Password?',
                                 style: TextStyle(color: Color(0xFF1D4F44)),
                               ),
                             ),
                           ),
                           const SizedBox(height: 8),
+
+                          // Tombol Login
                           SizedBox(
-                            width: double.infinity, // 🔥 full width button
+                            width: double.infinity,
                             child: Obx(
                               () => ElevatedButton(
                                 onPressed: controller.isLoading.value
@@ -113,6 +180,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF1D4F44),
                                   foregroundColor: Colors.white,
+                                  disabledBackgroundColor:
+                                      const Color(0xFF1D4F44).withOpacity(0.6),
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 16,
                                   ),
@@ -123,38 +192,50 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 child: controller.isLoading.value
                                     ? const SizedBox(
-                                        height: 18,
-                                        width: 18,
+                                        height: 20,
+                                        width: 20,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
                                           color: Colors.white,
                                         ),
                                       )
-                                    : const Text("Log In"),
+                                    : const Text(
+                                        'Masuk',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 12),
+
+                          // Tombol Register
                           SizedBox(
-                            width: double.infinity, // 🔥 full width button
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Get.to(() => RegisterScreen());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: () => Get.to(() => RegisterScreen()),
+                              style: OutlinedButton.styleFrom(
                                 foregroundColor: const Color(0xFF1D4F44),
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 16,
                                 ),
+                                side: const BorderSide(
+                                  color: Color(0xFF1D4F44),
+                                  width: 1.5,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  side: const BorderSide(
-                                    color: Color(0xFF1D4F44),
-                                  ),
                                 ),
                               ),
-                              child: const Text("Register"),
+                              child: const Text(
+                                'Buat Akun Baru',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
                         ],

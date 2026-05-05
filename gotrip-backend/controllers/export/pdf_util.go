@@ -8,23 +8,18 @@ import (
 	"github.com/phpdave11/gofpdf"
 )
 
-// Global constants for PDF table
-var headers = []string{"No", "Nama", "Tanggal", "Total", "Status"}
-var colWidths = []float64{10, 55, 40, 30, 40}
+var headers = []string{"No", "User ID", "Tanggal Naik", "Total", "Status"}
+var colWidths = []float64{10, 30, 50, 40, 40}
 
-// =====================================================
-// 🔵 UTIL: Generate PDF Table (Reusable)
-// =====================================================
 func buildPDFTable(pdf *gofpdf.Fpdf, bookings []models.Booking, title string) {
 
 	pdf.AddPage()
 	pdf.SetFont("Arial", "B", 16)
 
-	// Title
 	pdf.Cell(0, 10, title)
 	pdf.Ln(12)
 
-	// Header
+	// HEADER
 	pdf.SetFont("Arial", "B", 12)
 	pdf.SetFillColor(52, 152, 219)
 	pdf.SetTextColor(255, 255, 255)
@@ -34,23 +29,22 @@ func buildPDFTable(pdf *gofpdf.Fpdf, bookings []models.Booking, title string) {
 	}
 	pdf.Ln(-1)
 
-	// Body
+	// BODY
 	pdf.SetFont("Arial", "", 11)
 	pdf.SetTextColor(0, 0, 0)
 
-	for idx, b := range bookings {
+	for i, booking := range bookings {
 		row := []string{
-			fmt.Sprintf("%d", idx+1),
-			b.Nama,
-			b.Tanggal.Format("2006-01-02"),
-			fmt.Sprintf("Rp %d", b.TotalHarga),
-			b.Status,
+			fmt.Sprintf("%d", i+1),
+			fmt.Sprintf("%d", booking.UserID),
+			booking.HikingDate.Format("2006-01-02"),
+			fmt.Sprintf("Rp %d", int(booking.TotalPrice)),
+			booking.Status,
 		}
 
-		for i, col := range row {
-			pdf.CellFormat(colWidths[i], 9, col, "1", 0, "C", false, 0, "")
+		for j, col := range row {
+			pdf.CellFormat(colWidths[j], 9, col, "1", 0, "C", false, 0, "")
 		}
-
 		pdf.Ln(-1)
 	}
 }

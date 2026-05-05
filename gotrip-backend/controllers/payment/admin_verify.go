@@ -1,51 +1,95 @@
 package payment
 
 import (
-    "gotrip-backend/config"
-    "gotrip-backend/models"
-    "net/http"
-    "github.com/gin-gonic/gin"
+	"errors"
+	"net/http"
+	"strings"
+	"time"
+
+	"gotrip-backend/config"
+	"gotrip-backend/models"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type VerifyRequest struct {
-    Action     string `json:"action" binding:"required"` // "accept" atau "reject"
-    RejectNote string `json:"reject_note"`               // opsional
+	Action     string `json:"action" binding:"required"`
+	RejectNote string `json:"reject_note"`
 }
 
 func AdminVerifyPayment(c *gin.Context) {
-    id := c.Param("id")
+	id := strings.TrimSpace(c.Param("id"))
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID booking tidak valid"})
+		return
+	}
 
-    var req VerifyRequest
-    if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Input tidak valid"})
-        return
-    }
+	var req VerifyRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Input tidak valid"})
+		return
+	}
 
-    var booking models.Booking
-    if err := config.DB.First(&booking, id).Error; err != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Booking tidak ditemukan"})
-        return
-    }
+	var booking models.Booking
+	if err := config.DB.Preload("Payment").First(&booking, "id = ?", id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Booking tidak ditemukan"})
+			return
+		}
 
-    // PROSES VERIFIKASI
-    if req.Action == "accept" {
-        booking.Status = "Lunas"
-        booking.RejectNote = nil 
-    } else if req.Action == "reject" {
-        booking.Status = "Ditolak"
-        
-        note := req.RejectNote
-        booking.RejectNote = &note 
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mencari booking"})
+		return
+	}
 
-    } else {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Action tidak valid"})
-        return
-    }
+	if booking.Status != "waiting_verification" || booking.Payment == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Booking tidak sedang menunggu verifikasi pembayaran"})
+		return
+	}
 
-    config.DB.Save(&booking)
+	switch strings.ToLower(strings.TrimSpace(req.Action)) {
+	case "accept":
+		now := time.Now()
+		booking.Status = "paid"
+		booking.RejectNote = nil
+		booking.Payment.Status = "paid"
+		booking.Payment.RejectNote = nil
+		booking.Payment.VerifiedAt = &now
 
-    c.JSON(200, gin.H{
-        "message": "Status pembayaran diperbarui",
-        "data":    booking,
-    })
+	case "reject":
+		note := strings.TrimSpace(req.RejectNote)
+		if note == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Catatan penolakan wajib diisi"})
+			return
+		}
+
+		booking.Status = "cancelled"
+		booking.RejectNote = &note
+		booking.Payment.Status = "rejected"
+		booking.Payment.RejectNote = &note
+
+	default:
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Action tidak valid"})
+		return
+	}
+
+	if err := config.DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Save(&booking).Error; err != nil {
+			return err
+		}
+
+		return tx.Save(booking.Payment).Error
+	}); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal memperbarui booking"})
+		return
+	}
+
+	booking.ProofImage = booking.Payment.ProofImage
+	booking.PaymentMethod = booking.Payment.Method
+	booking.PaymentStatus = booking.Payment.Status
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Status pembayaran diperbarui",
+		"data":    booking,
+	})
 }

@@ -3,15 +3,14 @@ package main
 import (
 	"gotrip-backend/config"
 
-	// Controllers
 	authController "gotrip-backend/controllers/auth"
-	bookingController "gotrip-backend/controllers/booking"
+	checkpointController "gotrip-backend/controllers/checkpoint"
 	dashboardController "gotrip-backend/controllers/dashboard"
 	exportController "gotrip-backend/controllers/export"
 	paymentController "gotrip-backend/controllers/payment"
+	ticketController "gotrip-backend/controllers/ticket"
 	userController "gotrip-backend/controllers/user"
 
-	// Middleware
 	"gotrip-backend/middlewares"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +18,6 @@ import (
 
 func main() {
 
-	// Connect DB
 	config.ConnectDatabase()
 
 	r := gin.Default()
@@ -27,7 +25,7 @@ func main() {
 	// CORS
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, PATCH")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization")
 
 		if c.Request.Method == "OPTIONS" {
@@ -37,78 +35,58 @@ func main() {
 		c.Next()
 	})
 
-	// Static folder (image bukti pembayaran)
+	// Static upload
 	r.Static("/uploads", "./uploads")
 
-	// =====================================
-	// AUTH (Register, Login)
-	// =====================================
+	// ================= AUTH =================
 	auth := r.Group("/auth")
 	{
 		auth.POST("/register", authController.Register)
 		auth.POST("/login", authController.Login)
+
+		// 🔥 hanya dipakai sekali untuk buat admin pertama
+		auth.POST("/init-admin", authController.InitAdmin)
 	}
 
-	// =====================================
-	// PROTECTED ROUTES (JWT)
-	// =====================================
+	// ================= API =================
 	api := r.Group("/api", middlewares.AuthMiddleware())
 	{
+		// USER
+		api.POST("/bookings", ticketController.CreateBooking)
+		api.GET("/bookings", ticketController.GetBookings)
+		api.PATCH("/bookings/:id/proof", ticketController.UploadProof)
+		api.POST("/tickets", ticketController.CreateTicket)
+		api.GET("/tickets", ticketController.GetTickets)
+		api.PATCH("/tickets/:id/proof", ticketController.UploadProof)
+		api.POST("/checkpoint/scan", checkpointController.ScanBarcode)
 
-		// TEST PROFILE
 		api.GET("/profile", func(c *gin.Context) {
-			role := c.GetString("role")
-			userID := c.GetUint("user_id")
-
 			c.JSON(200, gin.H{
-				"message": "Halo pengguna!",
-				"user_id": userID,
-				"role":    role,
+				"user_id": c.GetUint("user_id"),
+				"role":    c.GetString("role"),
 			})
 		})
 
-		// =====================================
-		// PENDAKI (MOBILE USER)
-		// =====================================
-		pendaki := api.Group("/pendaki", middlewares.RoleMiddleware("pendaki"))
-		{
-			pendaki.POST("/booking", bookingController.CreateBooking)
-			pendaki.GET("/history", bookingController.GetHistory)
-		}
-
-		// =====================================
-		// ADMIN WEBSITE
-		// =====================================
+		// ================= ADMIN =================
 		admin := api.Group("/web-admin", middlewares.RoleMiddleware("admin"))
 		{
-			// Dashboard (jumlah pendaki, pendapatan)
 			admin.GET("/dashboard", dashboardController.AdminDashboard)
-
-			// Grafik
 			admin.GET("/chart/pendapatan", dashboardController.ChartPendapatan)
 			admin.GET("/chart/pendaki", dashboardController.ChartPendaki)
 
-			// Booking List + Update + Delete
-			admin.GET("/bookings", bookingController.AdminGetAllBookings)
-			admin.PUT("/booking/:id/status", bookingController.AdminUpdateStatus)
-			admin.DELETE("/booking/:id", bookingController.AdminDeleteBooking)
-
-			// Data Pendaki (Admin bisa **lihat, tambah, hapus**)
 			admin.GET("/pendaki", userController.GetPendaki)
 			admin.DELETE("/pendaki/:id", userController.DeletePendaki)
 
-			// Export CSV / PDF
+			admin.GET("/bookings", ticketController.GetAllBookingsAdmin)
+			admin.GET("/tickets", ticketController.GetAllTicketsAdmin)
+			admin.GET("/barcodes", checkpointController.GetBarcodes)
+
+			admin.PUT("/verify-payment/:id", paymentController.AdminVerifyPayment)
+
 			admin.GET("/export/csv", exportController.ExportCSV)
 			admin.GET("/export/pdf", exportController.ExportAllPDF)
-			admin.GET("/export/pdf/daily", exportController.ExportDailyPDF)
-			admin.GET("/export/pdf/weekly", exportController.ExportWeeklyPDF)
-			admin.GET("/export/pdf/monthly", exportController.ExportMonthlyPDF)
 
-			// Upload bukti pembayaran (admin)
-			admin.POST("/upload-proof", paymentController.AdminUploadProof)
-
-			// Verifikasi pembayaran
-			admin.PUT("/verify-payment/:id", paymentController.AdminVerifyPayment)
+			admin.POST("/register", authController.RegisterAdmin)
 		}
 	}
 

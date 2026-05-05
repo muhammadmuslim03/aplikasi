@@ -7,21 +7,21 @@ import (
 )
 
 func ChartPendaki(c *gin.Context) {
-    type Result struct {
-        Bulan string `json:"bulan"`
-        Total int64  `json:"total"`
-    }
+	type Result struct {
+		Bulan string `json:"bulan"`
+		Total int64  `json:"total"`
+	}
 
-    var result []Result
+	var result []Result
 
-    config.DB.Raw(`
-        SELECT TO_CHAR(created_at, 'YYYY-MM') AS bulan,
-               COUNT(*) AS total
-        FROM users
-        WHERE role = 'pendaki'
-        GROUP BY bulan
-        ORDER BY bulan ASC
-    `).Scan(&result)
+	config.DB.Raw(`
+		SELECT TO_CHAR(created_at, 'YYYY-MM') AS bulan,
+			   COUNT(*) AS total
+		FROM users
+		WHERE role = 'pendaki'
+		GROUP BY bulan
+		ORDER BY bulan ASC
+	`).Scan(&result)
 
-    c.JSON(200, gin.H{"data": result})
+	c.JSON(200, gin.H{"data": result})
 }

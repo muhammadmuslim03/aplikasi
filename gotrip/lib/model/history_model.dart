@@ -11,7 +11,7 @@ class BookingHistoryModel {
   final int totalHarga;
   final String status;
   final String proofImage;
-  final String rejectNote; 
+  final String rejectNote;
 
   BookingHistoryModel({
     required this.id,
@@ -43,7 +43,7 @@ class BookingHistoryModel {
       totalHarga: json['total_harga'] ?? 0,
       status: json['status'] ?? 'Menunggu Pembayaran',
       proofImage: json['proof_image'] ?? '',
-      rejectNote: json['reject_note'] ?? '', 
+      rejectNote: json['reject_note'] ?? '',
     );
   }
 }

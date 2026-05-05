@@ -1,16 +1,17 @@
 package user
 
 import (
+	"errors"
+	"net/http"
+	"strconv"
+
 	"gotrip-backend/config"
 	"gotrip-backend/models"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-// ==============================
-// GET LIST PENDAKI + SEARCH
-// ==============================
 func GetPendaki(c *gin.Context) {
 	search := c.Query("search")
 
@@ -20,7 +21,7 @@ func GetPendaki(c *gin.Context) {
 
 	if search != "" {
 		like := "%" + search + "%"
-		query = query.Where("username LIKE ? OR email LIKE ?", like, like)
+		query = query.Where("name ILIKE ? OR email ILIKE ?", like, like)
 	}
 
 	if err := query.Order("created_at DESC").Find(&users).Error; err != nil {
@@ -37,23 +38,35 @@ func GetPendaki(c *gin.Context) {
 	})
 }
 
-// ==============================
-// DELETE PENDAKI
-// ==============================
 func DeletePendaki(c *gin.Context) {
-	id := c.Param("id")
+	idParam := c.Param("id")
 
-	// Check apakah pendaki ada
-	var user models.User
-	if err := config.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(400, gin.H{
 			"status":  "error",
-			"message": "Pendaki tidak ditemukan",
+			"message": "ID tidak valid",
 		})
 		return
 	}
 
-	// Delete
+	var user models.User
+	if err := config.DB.Where("id = ? AND role = ?", id, "pendaki").First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{
+				"status":  "error",
+				"message": "Pendaki tidak ditemukan",
+			})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  "error",
+			"message": "Gagal mencari pendaki",
+		})
+		return
+	}
+
 	if err := config.DB.Delete(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",

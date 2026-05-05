@@ -1,23 +1,15 @@
-const API_BASE_URL = 'http://localhost:8080'; 
+import api, { getApiErrorMessage } from "./api";
 
-export const login = async (email, password, role) => {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-            email, 
-            password, 
-            role,
-        }),
+export const login = async (email, password) => {
+  try {
+    const response = await api.post("/auth/login", {
+      email,
+      password,
+      client: "admin",
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.error || 'Login gagal: Kesalahan Jaringan.'); 
-    }
-
-    return data;
+    return response.data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "Login gagal"));
+  }
 };

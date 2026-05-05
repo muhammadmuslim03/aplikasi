@@ -2,6 +2,7 @@ package dashboard
 
 import (
 	"database/sql"
+
 	"gotrip-backend/config"
 	"gotrip-backend/models"
 
@@ -9,39 +10,67 @@ import (
 )
 
 func AdminDashboard(c *gin.Context) {
-    var totalPendakiUser int64
-    var totalBooking int64
-    var totalPending int64
-    var totalPendakiBooking int64
-    
-    var totalPendapatan sql.NullFloat64 
 
-    config.DB.Model(&models.User{}).Where("role = ?", "pendaki").Count(&totalPendakiUser)
+	var totalUsers int64
+	var totalBookings int64
+	var totalPending int64
+	var totalHikers int64
+	var totalActiveHikers int64
+	var totalFinishedHikers int64
 
-    config.DB.Model(&models.Booking{}).Count(&totalBooking)
+	var totalRevenue sql.NullFloat64
+	paidStatuses := []string{"paid", "checked_in", "checked_out"}
 
-    config.DB.Model(&models.Booking{}).
-        Where("status = ?", "Terbayar").
-        Select("SUM(total_harga)").Scan(&totalPendapatan)
+	// jumlah user pendaki
+	config.DB.Model(&models.User{}).
+		Where("role = ?", "pendaki").
+		Count(&totalUsers)
 
-    config.DB.Model(&models.Booking{}).
-        Where("status = ?", "Menunggu Konfirmasi").
-        Count(&totalPending)
+	// total booking
+	config.DB.Model(&models.Booking{}).
+		Count(&totalBookings)
 
-    config.DB.Model(&models.Booking{}).
-        Select("COALESCE(SUM(jumlah_orang), 0)").
-        Scan(&totalPendakiBooking)
-    
-    pendapatanFinal := 0.0
-    if totalPendapatan.Valid {
-        pendapatanFinal = totalPendapatan.Float64
-    }
+	// pending
+	config.DB.Model(&models.Booking{}).
+		Where("status = ?", "pending").
+		Count(&totalPending)
 
-    c.JSON(200, gin.H{
-        "total_pendaki":         totalPendakiUser,
-        "total_booking":         totalBooking,
-        "total_pendapatan":      pendapatanFinal, 
-        "total_pending":         totalPending,
-        "total_pendaki_booking": totalPendakiBooking,  
-    })
+	// pendapatan
+	config.DB.Model(&models.Booking{}).
+		Where("status IN ?", paidStatuses).
+		Select("COALESCE(SUM(total_price),0)").
+		Scan(&totalRevenue)
+
+	// total pendaki dari booking
+	config.DB.Model(&models.Booking{}).
+		Select("COALESCE(SUM(total_members),0)").
+		Scan(&totalHikers)
+
+	// pendaki yang sedang berada di jalur
+	config.DB.Model(&models.Booking{}).
+		Where("status = ?", "checked_in").
+		Select("COALESCE(SUM(total_members),0)").
+		Scan(&totalActiveHikers)
+
+	// pendaki yang sudah selesai dan check-out
+	config.DB.Model(&models.Booking{}).
+		Where("status = ?", "checked_out").
+		Select("COALESCE(SUM(total_members),0)").
+		Scan(&totalFinishedHikers)
+
+	finalRevenue := 0.0
+	if totalRevenue.Valid {
+		finalRevenue = totalRevenue.Float64
+	}
+
+	c.JSON(200, gin.H{
+		"total_users":           totalUsers,
+		"total_tickets":         totalBookings,
+		"total_bookings":        totalBookings,
+		"total_pending":         totalPending,
+		"total_revenue":         finalRevenue,
+		"total_hikers":          totalHikers,
+		"total_active_hikers":   totalActiveHikers,
+		"total_finished_hikers": totalFinishedHikers,
+	})
 }

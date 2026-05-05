@@ -1,69 +1,72 @@
 package auth
 
 import (
-    "time"
+	"time"
 
-    "gotrip-backend/config"
-    "gotrip-backend/models"
+	"gotrip-backend/config"
+	"gotrip-backend/models"
 
-    "github.com/gin-gonic/gin"
-    "github.com/golang-jwt/jwt/v5"
-    "golang.org/x/crypto/bcrypt"
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var jwtSecret = []byte("your-secret-key-go-trip-2025")
 
-// ================= LOGIN =================
 func Login(c *gin.Context) {
-    var input models.LoginRequest
-    if err := c.ShouldBindJSON(&input); err != nil {
-        c.JSON(400, gin.H{"error": err.Error()})
-        return
-    }
+	var input models.LoginRequest
 
-    // Cari user berdasarkan email
-    var user models.User
-    if err := config.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
-        c.JSON(401, gin.H{"error": "Email atau password salah"})
-        return
-    }
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
 
-    // Cek password
-    if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
-        c.JSON(401, gin.H{"error": "Email atau password salah"})
-        return
-    }
+	if input.Client == "" {
+		input.Client = "mobile"
+	}
 
-    // ================================
-    // 🔥 VALIDASI ROLE
-    // ================================
-    if input.Role != "" && input.Role != user.Role {
-        c.JSON(403, gin.H{
-            "error": "Akses ditolak: Anda tidak memiliki hak login ke aplikasi ini",
-        })
-        return
-    }
+	var user models.User
+	if err := config.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
+		c.JSON(401, gin.H{"error": "Email atau password salah"})
+		return
+	}
 
-    // Generate JWT
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-        "user_id": user.ID,
-        "role":    user.Role,
-        "exp":     time.Now().Add(time.Hour * 24 * 7).Unix(),
-    })
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
+		c.JSON(401, gin.H{"error": "Email atau password salah"})
+		return
+	}
 
-    tokenString, err := token.SignedString(jwtSecret)
-    if err != nil {
-        c.JSON(500, gin.H{"error": "Gagal membuat token"})
-        return
-    }
+	if user.Role == "admin" && input.Client == "mobile" {
+		c.JSON(403, gin.H{"error": "Admin hanya bisa login di web admin"})
+		return
+	}
 
-    c.JSON(200, models.AuthResponse{
-        Token: tokenString,
-        User: models.UserResponse{
-            ID:       user.ID,
-            Username: user.Username,
-            Email:    user.Email,
-            Role:     user.Role,
-        },
-    })
+	if user.Role == "pendaki" && input.Client == "admin" {
+		c.JSON(403, gin.H{"error": "User tidak bisa login di admin"})
+		return
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": user.ID,
+		"role":    user.Role,
+		"exp":     time.Now().Add(time.Hour * 24 * 7).Unix(),
+	})
+
+	tokenString, _ := token.SignedString(jwtSecret)
+
+	c.JSON(200, models.AuthResponse{
+		Token: tokenString,
+		User: models.UserResponse{
+			ID:         user.ID,
+			Name:       user.Name,
+			Email:      user.Email,
+			Phone:      user.Phone,
+			NIK:        user.NIK,
+			Role:       user.Role,
+			CheckIn:    user.CheckIn,
+			CheckOut:   user.CheckOut,
+			CheckInAt:  user.CheckInAt,
+			CheckOutAt: user.CheckOutAt,
+		},
+	})
 }

@@ -1,40 +1,50 @@
 package models
 
-import "time"
+import (
+	"time"
 
-// === BOOKING (Database Model) ===
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
 type Booking struct {
-	ID           uint      `gorm:"primaryKey" json:"id"`
-	UserID       uint      `json:"user_id"`
-	Nama         string    `json:"nama"`
-	Email        string    `json:"email"`
-	Telepon      string    `json:"telepon"`
-	Darurat      string    `json:"darurat"`
-	Tanggal      time.Time `json:"tanggal"`
-	JumlahOrang  int       `json:"jumlah_orang"`
-	JumlahOjek   int       `json:"jumlah_ojek"`
-	TermasukOjek bool      `json:"termasuk_ojek"`
-	TotalHarga   int       `json:"total_harga"`
-	ProofImage   string    `json:"proof_image"`
+	ID        string `gorm:"type:uuid;primaryKey" json:"id"`
+	UserID    uint   `json:"user_id"`
+	User      *User  `gorm:"-" json:"user,omitempty"`
+	RouteID   int    `json:"route_id"`
+	RouteName string `json:"route_name"`
 
-	Status     string  `json:"status" gorm:"default:'Menunggu Konfirmasi'"`
-	RejectNote *string `json:"reject_note" gorm:"type:text"`
+	BookingDate time.Time `json:"booking_date"`
+	HikingDate  time.Time `json:"hiking_date"`
+
+	TotalMembers int     `json:"total_members"`
+	TotalPrice   float64 `json:"total_price"`
+
+	IncludeOjek bool `json:"include_ojek"`
+	OjekCount   int  `json:"ojek_count"`
+
+	Status        string     `gorm:"type:varchar(40);default:'pending'" json:"status"`
+	RejectNote    *string    `json:"reject_note"`
+	CheckedInAt   *time.Time `json:"checked_in_at"`
+	CheckedOutAt  *time.Time `json:"checked_out_at"`
+	Payment       *Payment   `json:"payment,omitempty"`
+	ProofImage    string     `gorm:"-" json:"proof_image,omitempty"`
+	PaymentMethod string     `gorm:"-" json:"payment_method,omitempty"`
+	PaymentStatus string     `gorm:"-" json:"payment_status,omitempty"`
 
 	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type BookingResponse struct {
-	ID           uint   `json:"id"`
-	Nama         string `json:"nama"`
-	Email        string `json:"email"`
-	Telepon      string `json:"telepon"`
-	Darurat      string `json:"darurat"`
-	Tanggal      string `json:"tanggal"`
-	JumlahOrang  int    `json:"jumlah_orang"`
-	JumlahOjek   int    `json:"jumlah_ojek"`
-	TermasukOjek bool   `json:"termasuk_ojek"`
-	TotalHarga   int    `json:"total_harga"`
-	ProofImage   string `json:"proof_image"`
-	Status       string `json:"status"`
-	RejectNote   string `json:"reject_note"`
+func (Booking) TableName() string {
+	return "bookings"
 }
+
+func (b *Booking) BeforeCreate(tx *gorm.DB) (err error) {
+	if b.ID == "" {
+		b.ID = uuid.New().String()
+	}
+	return
+}
+
+type Ticket = Booking

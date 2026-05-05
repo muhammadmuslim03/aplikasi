@@ -2,118 +2,209 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
+import '../model/payment_model.dart';
+import '../model/ticket_model.dart';
+import '../view/payment_proof_screen.dart';
 
 class BookingController extends GetxController {
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final namaController = TextEditingController();
-  final emailController = TextEditingController();
-  final teleponController = TextEditingController();
-  final daruratController = TextEditingController();
+  Rx<DateTime?> hikingDate = Rx<DateTime?>(null);
+  RxInt totalMembers = 1.obs;
 
-  Rx<DateTime?> tanggalPendakian = Rx<DateTime?>(null);
-  RxInt jumlahOrang = 1.obs;
-  RxBool termasukOjek = false.obs;
-  RxInt jumlahOjek = 0.obs;
+  RxBool includeOjek = false.obs;
+  RxInt ojekCount = 0.obs;
 
-  final int hargaPerOrang = 35000;
-  final int hargaPerOjek = 50000;
+  RxInt selectedRouteId = 0.obs;
+  RxString selectedRouteName = ''.obs;
+
+  RxBool isLoading = false.obs;
+  RxList<TicketModel> historyList = <TicketModel>[].obs;
+
+  final int pricePerPerson = 35000;
+  final int pricePerOjek = 50000;
+
+  RxInt totalPrice = 0.obs;
 
   final NumberFormat rupiah = NumberFormat.currency(
     locale: 'id',
-    symbol: 'Rp',
+    symbol: 'Rp ',
     decimalDigits: 0,
   );
 
-  RxInt totalHarga = 0.obs;
+  final String baseUrl = 'http://192.168.88.191:8080';
 
   @override
   void onInit() {
     super.onInit();
-    hitungTotal();
-    everAll([jumlahOrang, termasukOjek, jumlahOjek], (_) => hitungTotal());
+
+    _recalcTotal();
+
+    everAll([totalMembers, includeOjek, ojekCount], (_) {
+      _recalcTotal();
+    });
+
+    fetchHistory();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-    resetForm();
+  void _recalcTotal() {
+    int total = totalMembers.value * pricePerPerson;
+
+    if (includeOjek.value && ojekCount.value > 0) {
+      total += ojekCount.value * pricePerOjek;
+    }
+
+    totalPrice.value = total;
   }
 
   void resetForm() {
-    namaController.clear();
-    emailController.clear();
-    teleponController.clear();
-    daruratController.clear();
-
-    tanggalPendakian.value = null;
-    jumlahOrang.value = 1;
-    termasukOjek.value = false;
-    jumlahOjek.value = 0;
-
-    hitungTotal();
+    hikingDate.value = null;
+    totalMembers.value = 1;
+    includeOjek.value = false;
+    ojekCount.value = 0;
+    selectedRouteId.value = 0;
+    selectedRouteName.value = '';
+    _recalcTotal();
   }
 
-  void hitungTotal() {
-    int total = jumlahOrang.value * hargaPerOrang;
-    if (termasukOjek.value) {
-      total += jumlahOjek.value * hargaPerOjek;
+  void selectRoute(int id, String name) {
+    selectedRouteId.value = id;
+    selectedRouteName.value = name;
+  }
+
+  Future<void> fetchHistory() async {
+    isLoading.value = true;
+
+    final token = GetStorage().read('token');
+
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/bookings'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        historyList.value = (data as List)
+            .map((e) => TicketModel.fromJson(e))
+            .toList();
+      } else {
+        Get.snackbar(
+          'Error',
+          'Gagal mengambil data booking',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
     }
-    totalHarga.value = total;
   }
 
-  Future<void> createBooking() async {
-    final tanggal = tanggalPendakian.value;
-
-    if (tanggal == null) {
-      Get.snackbar("Error", "Tanggal pendakian belum dipilih");
+  Future<void> submitBooking() async {
+    // VALIDASI
+    if (hikingDate.value == null) {
+      Get.snackbar(
+        'Gagal',
+        'Tanggal pendakian belum dipilih',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return;
     }
 
-    final body = jsonEncode({
-      "nama": namaController.text,
-      "email": emailController.text,
-      "telepon": teleponController.text,
-      "darurat": daruratController.text,
-      "tanggal": tanggal.toIso8601String().split("T").first,
-      "jumlah_orang": jumlahOrang.value,
-      "jumlah_ojek": jumlahOjek.value,
-      "termasuk_ojek": termasukOjek.value,
-      "total_harga": totalHarga.value,
-    });
-
-    final response = await http.post(
-      Uri.parse("http://10.246.143.109:8080/api/pendaki/booking"),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer ${GetStorage().read('token')}",
-      },
-      body: body,
-    );
-
-    print("STATUS: ${response.statusCode}");
-    print("BODY: ${response.body}");
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      Get.snackbar("Berhasil", "Pemesanan berhasil dikirim!");
-      resetForm();
-    } else {
-      Get.snackbar("Gagal", "Terjadi kesalahan saat mengirim data.");
+    if (selectedRouteId.value == 0) {
+      Get.snackbar(
+        'Gagal',
+        'Jalur pendakian belum dipilih',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
     }
-  }
 
-  void submitForm(BuildContext context) {
-    if (formKey.currentState!.validate()) {
-      createBooking();
+    final token = GetStorage().read('token');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Pemesanan berhasil! Total: ${rupiah.format(totalHarga.value)}',
-          ),
-        ),
+    try {
+      if (includeOjek.value && ojekCount.value == 0) {
+        ojekCount.value = 1;
+      }
+
+      final bool validOjek = includeOjek.value && ojekCount.value > 0;
+
+      final bodyMap = {
+        'route_id': selectedRouteId.value,
+        'hiking_date': hikingDate.value!.toIso8601String().split('T').first,
+        'total_members': totalMembers.value,
+        'total_price': totalPrice.value,
+        'include_ojek': validOjek,
+        'ojek_count': validOjek ? ojekCount.value : 0,
+      };
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/bookings'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(bodyMap),
+      );
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        final err = jsonDecode(response.body);
+        Get.snackbar(
+          'Gagal',
+          err['error'] ?? 'Gagal membuat booking',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      final ticketData = jsonDecode(response.body);
+      final String ticketId = ticketData['id'];
+
+      final paymentData = PaymentModel(
+        ticketId: ticketId,
+        routeId: selectedRouteId.value,
+        routeName: selectedRouteName.value,
+        hikingDate: hikingDate.value!,
+        totalMembers: totalMembers.value,
+        totalPrice: totalPrice.value.toDouble(),
+        includeOjek: validOjek,
+        ojekCount: validOjek ? ojekCount.value : 0,
+      );
+
+      Get.to(
+        () => PaymentProofScreen(paymentData: paymentData),
+        transition: Transition.rightToLeft,
+      );
+
+      await fetchHistory();
+
+      Get.snackbar(
+        'Sukses',
+        'Booking berhasil dibuat',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
     }
   }

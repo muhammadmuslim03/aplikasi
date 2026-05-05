@@ -1,150 +1,146 @@
-import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-
 import '../model/payment_model.dart';
-import '../controller/history_controller.dart';
-import '../view/bottomnavigation.dart';
 
-class PaymentController extends ChangeNotifier {
-  PaymentModel? payment;
+class PaymentController extends GetxController {
+  Rx<PaymentModel?> payment = Rx<PaymentModel?>(null);
 
-  String? selectedMethod;
-  String? selectedAccount;
+  RxString selectedMethod = ''.obs;
+  RxString selectedAccount = ''.obs;
+  Rx<Uint8List?> proofImageBytes = Rx<Uint8List?>(null);
+  RxString proofImageFileName = ''.obs;
+  RxBool isUploading = false.obs;
 
   final ImagePicker _picker = ImagePicker();
-  final box = GetStorage();
+  final String baseUrl = 'http://192.168.88.191:8080';
 
-  Uint8List? proofImageBytes;
-  String? proofImageFileName;
+  final List<Map<String, String>> paymentMethods = [
+    {'label': 'BCA', 'account': '513-301-6782 a.n Muhammad Muslim'},
+    {'label': 'Mandiri', 'account': '123-456-7890 a.n Muhammad Muslim'},
+  ];
 
-  // ================= SET DATA =================
   void setPayment(PaymentModel data) {
-    payment = data;
-    notifyListeners();
+    payment.value = data;
+    selectedMethod.value = '';
+    selectedAccount.value = '';
+    proofImageBytes.value = null;
+    proofImageFileName.value = '';
   }
 
   void selectPaymentMethod(String method, String account) {
-    selectedMethod = method;
-    selectedAccount = account;
-    notifyListeners();
+    selectedMethod.value = method;
+    selectedAccount.value = account;
   }
 
-  // ================= PICK IMAGE =================
   Future<void> pickProofImage() async {
     try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
       if (image != null) {
-        proofImageBytes = await image.readAsBytes();
-        proofImageFileName = image.name;
-
-        payment = (payment ?? PaymentModel(date: DateTime.now())).copyWith(
-          proofImagePath: "local-preview",
-        );
-
-        notifyListeners();
+        proofImageBytes.value = await image.readAsBytes();
+        proofImageFileName.value = image.name;
       }
     } catch (e) {
-      debugPrint("❌ Error pilih gambar: $e");
+      Get.snackbar(
+        'Error',
+        'Gagal memilih gambar: ${e.toString()}',
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
+      );
     }
   }
 
-  // ================= SEND BOOKING =================
-  Future<bool> sendBooking(BuildContext context, PaymentModel data) async {
-    final token = box.read("token");
-    const String apiUrl = "http://10.246.143.109:8080/api/pendaki/booking";
+  Future<bool> _uploadProof() async {
+    final token = GetStorage().read('token');
+    final ticketId = payment.value?.ticketId;
 
-    if (token == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Token tidak ditemukan, login ulang.")),
-      );
-      return false;
-    }
-
-    if (proofImageBytes == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Bukti pembayaran diperlukan.")),
+    if (token == null || ticketId == null || ticketId.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Data booking tidak ditemukan.',
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
       );
       return false;
     }
 
     try {
-      var request = http.MultipartRequest("POST", Uri.parse(apiUrl));
-      request.headers["Authorization"] = "Bearer $token";
+      final request = http.MultipartRequest(
+        'PATCH',
+        Uri.parse('$baseUrl/api/bookings/$ticketId/proof'),
+      );
 
-      request.fields["nama"] = data.name;
-      request.fields["email"] = data.email;
-      request.fields["telepon"] = data.telepon;
-      request.fields["darurat"] = data.darurat ?? "-";
-      request.fields["tanggal"] = DateFormat("yyyy-MM-dd").format(data.date);
-      request.fields["jumlah_orang"] = data.jumlahOrang.toString();
-      request.fields["jumlah_ojek"] = data.jumlahOjek.toString();
-      request.fields["termasuk_ojek"] = data.termasukOjek.toString();
-      request.fields["total_harga"] = data.total!.toInt().toString();
+      request.headers['Authorization'] = 'Bearer $token';
+
+      request.fields['payment_method'] = selectedMethod.value;
 
       request.files.add(
         http.MultipartFile.fromBytes(
-          "proof_image",
-          proofImageBytes!,
-          filename: proofImageFileName,
+          'proof_image',
+          proofImageBytes.value!,
+          filename: proofImageFileName.value,
         ),
       );
 
-      final streamed = await request.send();
-      final response = await http.Response.fromStream(streamed);
+      final response = await request.send();
 
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
-      debugPrint("❌ EXCEPTION: $e");
+      Get.snackbar(
+        'Error',
+        'Gagal upload: ${e.toString()}',
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
+      );
       return false;
     }
   }
 
-  // ================= CONFIRM PAYMENT =================
-  Future<void> confirmPayment(BuildContext context) async {
-    if (selectedMethod == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Pilih metode pembayaran dulu.")),
+  Future<void> confirmPayment() async {
+    if (selectedMethod.value.isEmpty) {
+      Get.snackbar(
+        'Gagal',
+        'Pilih metode pembayaran terlebih dahulu.',
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
       );
       return;
     }
 
-    if (proofImageBytes == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Upload bukti pembayaran dulu.")),
+    if (proofImageBytes.value == null) {
+      Get.snackbar(
+        'Gagal',
+        'Upload bukti pembayaran terlebih dahulu.',
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
       );
       return;
     }
 
-    if (payment == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Data pembayaran tidak ditemukan.")),
+    isUploading.value = true;
+
+    final success = await _uploadProof();
+
+    isUploading.value = false;
+
+    if (success) {
+      Get.snackbar(
+        'Berhasil',
+        'Bukti pembayaran dikirim, menunggu verifikasi.',
+        backgroundColor: const Color(0xFF1D4F44),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
       );
-      return;
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      Get.offAllNamed('/home', arguments: {'tab': 1});
     }
-
-    final success = await sendBooking(context, payment!);
-
-    if (!success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Gagal menyimpan ke server.")),
-      );
-      return;
-    }
-
-    // 🔄 Refresh history TANPA navigasi
-    if (Get.isRegistered<BookingHistoryController>()) {
-      await Get.find<BookingHistoryController>().fetchHistory();
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Pembayaran berhasil dikonfirmasi!")),
-    );
-
-    Get.offAll(() => Bottomnavigation(initialIndex: 0));
   }
 }

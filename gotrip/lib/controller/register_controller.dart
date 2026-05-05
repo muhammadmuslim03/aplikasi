@@ -1,30 +1,42 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterController extends GetxController {
-  var username = ''.obs;
+  var name = ''.obs;
   var email = ''.obs;
+  var phone = ''.obs;
+  var NIK = ''.obs; 
   var password = ''.obs;
   var confirmPassword = ''.obs;
   var isLoading = false.obs;
-  final box = GetStorage();
 
-  final String baseUrl = 'http://10.246.143.109:8080';
+  final String baseUrl = 'http://192.168.88.191:8080';
 
   Future<void> register() async {
-    if (username.value.isEmpty ||
+    if (name.value.isEmpty ||
         email.value.isEmpty ||
+        phone.value.isEmpty ||
+        NIK.value.isEmpty ||
         password.value.isEmpty ||
         confirmPassword.value.isEmpty) {
-      Get.snackbar('Gagal', 'Semua kolom wajib diisi');
+      Get.snackbar(
+        'Gagal',
+        'Semua kolom wajib diisi',
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
+      );
       return;
     }
 
     if (password.value != confirmPassword.value) {
-      Get.snackbar('Gagal', 'Password dan konfirmasi tidak sama');
+      Get.snackbar(
+        'Gagal',
+        'Password dan konfirmasi tidak sama',
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
+      );
       return;
     }
 
@@ -35,33 +47,49 @@ class RegisterController extends GetxController {
         Uri.parse('$baseUrl/auth/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'username': username.value,
+          'name': name.value,                       
           'email': email.value,
+          'phone': phone.value,                    
+          'NIK': NIK.value,  
           'password': password.value,
-          'confirm_password': confirmPassword.value,
+          'role': 'pendaki',                     
         }),
       );
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar(
           'Berhasil',
-          data['message'] ?? 'Registrasi berhasil!',
+          data['message'] ?? 'Akun berhasil dibuat! Silakan login.',
           backgroundColor: const Color(0xFF1D4F44),
           colorText: Colors.white,
         );
         Get.offAllNamed('/login');
       } else {
+        final String errorMsg =
+            data['error'] ?? data['message'] ?? 'Registrasi gagal';
         Get.snackbar(
           'Gagal',
-          data['error'] ?? 'Registrasi gagal',
+          errorMsg,
           backgroundColor: Colors.red[400],
           colorText: Colors.white,
         );
       }
+    } on http.ClientException {
+      Get.snackbar(
+        'Error Koneksi',
+        'Tidak dapat terhubung ke server. Periksa jaringan kamu.',
+        backgroundColor: Colors.orange[700],
+        colorText: Colors.white,
+      );
     } catch (e) {
-      Get.snackbar('Error', 'Tidak dapat terhubung ke server');
+      Get.snackbar(
+        'Error',
+        'Terjadi kesalahan: ${e.toString()}',
+        backgroundColor: Colors.red[400],
+        colorText: Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }
