@@ -1,6 +1,8 @@
 package ticket
 
 import (
+	"errors"
+	"net/http"
 	"time"
 
 	"gotrip-backend/config"
@@ -33,10 +35,26 @@ func createBooking(c *gin.Context) {
 		return
 	}
 
+	var hikingRoute models.HikingRoute
+	if err := config.DB.First(&hikingRoute, "id = ?", input.RouteID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Jalur pendakian tidak ditemukan"})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mencari jalur pendakian"})
+		return
+	}
+
+	if !hikingRoute.IsOpen {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Jalur pendakian sedang ditutup"})
+		return
+	}
+
 	booking := models.Booking{
 		UserID:    userID,
 		RouteID:   input.RouteID,
-		RouteName: getRouteName(input.RouteID),
+		RouteName: hikingRoute.RouteName,
 
 		BookingDate: time.Now(),
 		HikingDate:  hikingDate,
@@ -71,17 +89,4 @@ func createBooking(c *gin.Context) {
 
 	booking.Payment = &payment
 	c.JSON(201, booking)
-}
-
-func getRouteName(id int) string {
-	switch id {
-	case 1:
-		return "Jalur Garung"
-	case 2:
-		return "Jalur Bowongso"
-	case 3:
-		return "Jalur Kaliangkrik"
-	default:
-		return "Unknown"
-	}
 }

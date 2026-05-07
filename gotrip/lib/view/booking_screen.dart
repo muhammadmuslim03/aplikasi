@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../controller/booking_controller.dart';
+import '../controller/hiking_route_controller.dart';
 
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
@@ -13,6 +14,7 @@ class BookingScreen extends StatefulWidget {
 
 class _BookingScreenState extends State<BookingScreen> {
   late BookingController controller;
+  late HikingRouteController routeController;
 
   @override
   void initState() {
@@ -22,6 +24,10 @@ class _BookingScreenState extends State<BookingScreen> {
     }
     controller = Get.put(BookingController());
     controller.resetForm();
+    routeController = Get.isRegistered<HikingRouteController>()
+        ? Get.find<HikingRouteController>()
+        : Get.put(HikingRouteController(), permanent: true);
+    routeController.fetchRoutes();
 
     // Jika dipanggil dari HomeScreen dengan argument route
     final args = Get.arguments as Map<String, dynamic>?;
@@ -254,9 +260,9 @@ class _BookingScreenState extends State<BookingScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1D4F44).withOpacity(0.06),
+                  color: const Color(0xFF1D4F44).withValues(alpha: 0.06),
                   border: Border.all(
-                    color: const Color(0xFF1D4F44).withOpacity(0.3),
+                    color: const Color(0xFF1D4F44).withValues(alpha: 0.3),
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -329,11 +335,70 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   Widget _buildRouteSelector() {
-    final List<Map<String, dynamic>> routes = [
-      {'id': 1, 'route_name': 'Jalur Garung'},
-      {'id': 2, 'route_name': 'Jalur Bowongso'},
-      {'id': 3, 'route_name': 'Jalur Kaliangkrik'},
-    ];
+    if (routeController.isLoading.value && routeController.routes.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Row(
+          children: [
+            SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            SizedBox(width: 12),
+            Text('Memuat status jalur...'),
+          ],
+        ),
+      );
+    }
+
+    if (routeController.errorMessage.value.isNotEmpty &&
+        routeController.routes.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.red.shade200),
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.red.withValues(alpha: 0.04),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              routeController.errorMessage.value,
+              style: TextStyle(color: Colors.red[700], fontSize: 13),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: routeController.fetchRoutes,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Coba lagi'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (routeController.routes.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Text('Belum ada data jalur pendakian.'),
+      );
+    }
+
+    final selectedRouteId = controller.selectedRouteId.value;
+    final selectedValue =
+        routeController.routes.any((route) => route.id == selectedRouteId)
+        ? selectedRouteId
+        : null;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -344,22 +409,69 @@ class _BookingScreenState extends State<BookingScreen> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           isExpanded: true,
-          value: controller.selectedRouteId.value == 0
-              ? null
-              : controller.selectedRouteId.value,
-          hint: const Text('Pilih jalur pendakian'),
-          items: routes
+          value: selectedValue,
+          hint: Text(
+            controller.selectedRouteName.value.isEmpty
+                ? 'Pilih jalur pendakian'
+                : controller.selectedRouteName.value,
+          ),
+          items: routeController.routes
               .map(
-                (r) => DropdownMenuItem<int>(
-                  value: r['id'] as int,
-                  child: Text(r['route_name']),
+                (route) => DropdownMenuItem<int>(
+                  value: route.id,
+                  enabled: route.isOpen,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          route.routeName,
+                          style: TextStyle(
+                            color: route.isOpen ? Colors.black87 : Colors.grey,
+                          ),
+                        ),
+                      ),
+                      if (!route.isOpen)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'Ditutup',
+                            style: TextStyle(
+                              color: Colors.red[700],
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               )
               .toList(),
           onChanged: (val) {
             if (val != null) {
-              final route = routes.firstWhere((r) => r['id'] == val);
-              controller.selectRoute(val, route['route_name']);
+              final route = routeController.findById(val);
+              if (route == null) return;
+
+              if (!route.isOpen) {
+                Get.snackbar(
+                  'Jalur ditutup',
+                  route.closedReason.isEmpty
+                      ? '${route.routeName} sedang ditutup.'
+                      : route.closedReason,
+                  backgroundColor: Colors.red[400],
+                  colorText: Colors.white,
+                );
+                return;
+              }
+
+              controller.selectRoute(route.id, route.routeName);
             }
           },
         ),

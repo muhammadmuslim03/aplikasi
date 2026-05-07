@@ -367,6 +367,10 @@ img {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.routes-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .stat-card {
   display: grid;
   gap: 8px;
@@ -632,6 +636,10 @@ img {
   min-width: 1040px;
 }
 
+.routes-table {
+  min-width: 940px;
+}
+
 .data-table th,
 .data-table td {
   border-bottom: 1px solid var(--line);
@@ -661,6 +669,11 @@ img {
   display: block;
   font-size: 12px;
   margin-top: 4px;
+}
+
+.route-note {
+  color: var(--muted);
+  max-width: 280px;
 }
 
 .mono {

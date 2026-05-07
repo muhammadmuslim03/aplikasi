@@ -5,7 +5,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileController extends GetxController {
-  // Field sesuai schema tabel users
   var name = ''.obs;
   var email = ''.obs;
   var phone = ''.obs;
@@ -15,7 +14,7 @@ class ProfileController extends GetxController {
   var isUpdating = false.obs;
 
   final box = GetStorage();
-  final String baseUrl = 'http://192.168.88.191:8080';
+  final String baseUrl = 'http://10.100.229.109:8080';
 
   @override
   void onInit() {

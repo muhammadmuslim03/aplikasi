@@ -2,35 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import '../controller/hiking_route_controller.dart';
 import '../controller/news_controller.dart';
 import 'booking_screen.dart';
 import 'news_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
-  final NewsController newsController = Get.put(NewsController());
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-  final List<Map<String, dynamic>> routes = [
-    {
-      'id': 1,
-      'route_name': 'Jalur Garung',
-      'description': 'Jalur paling populer, cocok untuk pendaki pemula',
-      'is_open': true,
-    },
-    {
-      'id': 2,
-      'route_name': 'Jalur Bowongso',
-      'description': 'Jalur menantang dengan pemandangan indah',
-      'is_open': true,
-    },
-    {
-      'id': 3,
-      'route_name': 'Jalur Kaliangkrik',
-      'description': 'Jalur alternatif yang lebih sepi',
-      'is_open': true,
-    },
-  ];
+class _HomeScreenState extends State<HomeScreen> {
+  late final NewsController newsController;
+  late final HikingRouteController routeController;
+
+  @override
+  void initState() {
+    super.initState();
+    newsController = Get.put(NewsController());
+    routeController = Get.isRegistered<HikingRouteController>()
+        ? Get.find<HikingRouteController>()
+        : Get.put(HikingRouteController(), permanent: true);
+    routeController.fetchRoutes();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,34 +46,43 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: const Color(0xFF1D4F44),
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Hero Banner ──
-            _buildHeroBanner(userName),
+      body: Obx(
+        () => RefreshIndicator(
+          onRefresh: routeController.fetchRoutes,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── Hero Banner ──
+                _buildHeroBanner(userName, routeController.hasOpenRoutes),
 
-            const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-            // ── Jalur Pendakian ──
-            _sectionHeader('Jalur Pendakian', null),
-            const SizedBox(height: 12),
-            _buildRouteList(),
+                // ── Jalur Pendakian ──
+                _sectionHeader('Jalur Pendakian', null),
+                const SizedBox(height: 12),
+                _buildRouteList(),
 
-            const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-            // ── Berita Terkini ──
-            _sectionHeader('Berita Terkini', () => Get.to(const NewsScreen())),
-            const SizedBox(height: 12),
-            _buildNewsList(),
-          ],
+                // ── Berita Terkini ──
+                _sectionHeader(
+                  'Berita Terkini',
+                  () => Get.to(const NewsScreen()),
+                ),
+                const SizedBox(height: 12),
+                _buildNewsList(),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeroBanner(String userName) {
+  Widget _buildHeroBanner(String userName, bool hasOpenRoutes) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -90,7 +95,7 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1D4F44).withOpacity(0.4),
+            color: const Color(0xFF1D4F44).withValues(alpha: 0.4),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -119,7 +124,21 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ElevatedButton.icon(
-            onPressed: () => Get.to(() => BookingScreen()),
+            onPressed: routeController.isLoading.value
+                ? null
+                : () {
+                    if (!hasOpenRoutes) {
+                      Get.snackbar(
+                        'Jalur ditutup',
+                        'Belum ada jalur pendakian yang bisa dipesan.',
+                        backgroundColor: Colors.red[400],
+                        colorText: Colors.white,
+                      );
+                      return;
+                    }
+
+                    Get.to(() => const BookingScreen());
+                  },
             icon: const Icon(Icons.confirmation_number_outlined, size: 18),
             label: const Text(
               'Pesan Booking',
@@ -159,9 +178,64 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildRouteList() {
+    if (routeController.isLoading.value && routeController.routes.isEmpty) {
+      return Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: const Padding(
+          padding: EdgeInsets.all(18),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              SizedBox(width: 12),
+              Text('Memuat status jalur pendakian...'),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (routeController.errorMessage.value.isNotEmpty &&
+        routeController.routes.isEmpty) {
+      return Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                routeController.errorMessage.value,
+                style: TextStyle(color: Colors.red[700], fontSize: 13),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: routeController.fetchRoutes,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Coba lagi'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (routeController.routes.isEmpty) {
+      return Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: const Padding(
+          padding: EdgeInsets.all(18),
+          child: Text('Belum ada data jalur pendakian.'),
+        ),
+      );
+    }
+
     return Column(
-      children: routes.map((route) {
-        final bool isOpen = route['is_open'] as bool;
+      children: routeController.routes.map((route) {
+        final bool isOpen = route.isOpen;
         return Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -177,13 +251,13 @@ class HomeScreen extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFF1D4F44).withOpacity(0.1),
+                color: const Color(0xFF1D4F44).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(Icons.terrain, color: Color(0xFF1D4F44)),
             ),
             title: Text(
-              route['route_name'],
+              route.routeName,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
             subtitle: Column(
@@ -191,9 +265,16 @@ class HomeScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 2),
                 Text(
-                  route['description'],
+                  route.description,
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
+                if (!isOpen && route.closedReason.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    route.closedReason,
+                    style: TextStyle(fontSize: 12, color: Colors.red[700]),
+                  ),
+                ],
                 const SizedBox(height: 6),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -202,8 +283,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isOpen
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.red.withOpacity(0.1),
+                        ? Colors.green.withValues(alpha: 0.1)
+                        : Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -223,16 +304,28 @@ class HomeScreen extends StatelessWidget {
                     size: 16,
                     color: Colors.grey,
                   )
-                : null,
-            onTap: isOpen
-                ? () => Get.to(
-                    () => BookingScreen(),
-                    arguments: {
-                      'route_id': route['id'],
-                      'route_name': route['route_name'],
-                    },
-                  )
-                : null,
+                : Icon(Icons.lock_outline, size: 18, color: Colors.red[300]),
+            onTap: () {
+              if (!isOpen) {
+                Get.snackbar(
+                  'Jalur ditutup',
+                  route.closedReason.isEmpty
+                      ? '${route.routeName} sedang ditutup.'
+                      : route.closedReason,
+                  backgroundColor: Colors.red[400],
+                  colorText: Colors.white,
+                );
+                return;
+              }
+
+              Get.to(
+                () => const BookingScreen(),
+                arguments: {
+                  'route_id': route.id,
+                  'route_name': route.routeName,
+                },
+              );
+            },
           ),
         );
       }).toList(),
@@ -272,7 +365,7 @@ class HomeScreen extends StatelessWidget {
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                      errorBuilder: (context, error, stackTrace) => Container(
                         width: 100,
                         height: 100,
                         color: Colors.grey[200],

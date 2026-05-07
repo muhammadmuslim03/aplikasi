@@ -8,6 +8,7 @@ import (
 	dashboardController "gotrip-backend/controllers/dashboard"
 	exportController "gotrip-backend/controllers/export"
 	paymentController "gotrip-backend/controllers/payment"
+	routeController "gotrip-backend/controllers/route"
 	ticketController "gotrip-backend/controllers/ticket"
 	userController "gotrip-backend/controllers/user"
 
@@ -54,6 +55,7 @@ func main() {
 		// USER
 		api.POST("/bookings", ticketController.CreateBooking)
 		api.GET("/bookings", ticketController.GetBookings)
+		api.GET("/hiking-routes", routeController.GetHikingRoutes)
 		api.PATCH("/bookings/:id/proof", ticketController.UploadProof)
 		api.POST("/tickets", ticketController.CreateTicket)
 		api.GET("/tickets", ticketController.GetTickets)
@@ -79,6 +81,8 @@ func main() {
 
 			admin.GET("/bookings", ticketController.GetAllBookingsAdmin)
 			admin.GET("/tickets", ticketController.GetAllTicketsAdmin)
+			admin.GET("/hiking-routes", routeController.GetHikingRoutes)
+			admin.PATCH("/hiking-routes/:id/status", routeController.UpdateHikingRouteStatus)
 			admin.GET("/barcodes", checkpointController.GetBarcodes)
 
 			admin.PUT("/verify-payment/:id", paymentController.AdminVerifyPayment)

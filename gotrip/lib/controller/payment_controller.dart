@@ -16,7 +16,7 @@ class PaymentController extends GetxController {
   RxBool isUploading = false.obs;
 
   final ImagePicker _picker = ImagePicker();
-  final String baseUrl = 'http://192.168.88.191:8080';
+  final String baseUrl = 'http://10.100.229.109:8080';
 
   final List<Map<String, String>> paymentMethods = [
     {'label': 'BCA', 'account': '513-301-6782 a.n Muhammad Muslim'},

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../model/payment_model.dart';
 import '../model/ticket_model.dart';
 import '../view/payment_proof_screen.dart';
+import 'hiking_route_controller.dart';
 
 class BookingController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -35,7 +36,7 @@ class BookingController extends GetxController {
     decimalDigits: 0,
   );
 
-  final String baseUrl = 'http://192.168.88.191:8080';
+  final String baseUrl = 'http://10.100.229.109:8080';
 
   @override
   void onInit() {
@@ -78,7 +79,13 @@ class BookingController extends GetxController {
   Future<void> fetchHistory() async {
     isLoading.value = true;
 
-    final token = GetStorage().read('token');
+    final token = GetStorage().read('token')?.toString().trim();
+
+    if (token == null || token.isEmpty) {
+      historyList.clear();
+      isLoading.value = false;
+      return;
+    }
 
     try {
       final response = await http.get(
@@ -134,7 +141,34 @@ class BookingController extends GetxController {
       return;
     }
 
-    final token = GetStorage().read('token');
+    if (Get.isRegistered<HikingRouteController>()) {
+      final routeController = Get.find<HikingRouteController>();
+      final selectedRoute = routeController.findById(selectedRouteId.value);
+
+      if (selectedRoute != null && !selectedRoute.isOpen) {
+        Get.snackbar(
+          'Gagal',
+          selectedRoute.closedReason.isEmpty
+              ? 'Jalur pendakian sedang ditutup'
+              : selectedRoute.closedReason,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+    }
+
+    final token = GetStorage().read('token')?.toString().trim();
+
+    if (token == null || token.isEmpty) {
+      Get.snackbar(
+        'Gagal',
+        'Token tidak ditemukan. Silakan login ulang.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
     try {
       if (includeOjek.value && ojekCount.value == 0) {

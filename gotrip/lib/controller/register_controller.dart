@@ -12,7 +12,7 @@ class RegisterController extends GetxController {
   var confirmPassword = ''.obs;
   var isLoading = false.obs;
 
-  final String baseUrl = 'http://192.168.88.191:8080';
+  final String baseUrl = 'http://10.100.229.109:8080';
 
   Future<void> register() async {
     if (name.value.isEmpty ||

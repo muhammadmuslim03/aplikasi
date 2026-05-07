@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 const menuItems = [
   { to: "/", label: "Dashboard", end: true, code: "DB" },
   { to: "/tickets", label: "Booking", code: "BK" },
+  { to: "/hiking-routes", label: "Jalur", code: "JR" },
   { to: "/users", label: "Pendaki", code: "PD" },
 ];
 

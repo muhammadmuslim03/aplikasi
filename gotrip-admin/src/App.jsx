@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Tickets from "./pages/Tickets";
 import Users from "./pages/Users";
+import HikingRoutes from "./pages/HikingRoutes";
 import NotAuthorized from "./pages/NotAuthorized";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -32,6 +33,15 @@ export default function App() {
         />
 
         <Route path="/bookings" element={<Navigate to="/tickets" replace />} />
+
+        <Route
+          path="/hiking-routes"
+          element={
+            <ProtectedRoute>
+              <HikingRoutes />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/users"
