@@ -12,8 +12,12 @@ class NavigationController extends ChangeNotifier {
 
   Position? currentPosition;
   bool isTracking = false;
+  bool isFetchingWeather = false;
   String selectedRoute = 'normal';
-  final String apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';
+
+  static const double basecampElevation = 1722;
+  static const double summitElevation = 3371;
+  static const Duration _weatherTimeout = Duration(seconds: 10);
 
   final LatLng basecampKaliangkrik = const LatLng(-7.3800, 110.1500);
   final LatLng pos1 = const LatLng(-7.3820, 110.1400);
@@ -21,17 +25,22 @@ class NavigationController extends ChangeNotifier {
   final LatLng pos3 = const LatLng(-7.3840, 110.1200);
   final LatLng puncakSumbing = const LatLng(-7.3847, 110.0755);
 
-  /// ✅ Cek izin lokasi dan mulai tracking
+  /// Cek izin lokasi dan mulai tracking.
   Future<void> checkPermissionAndStartTracking(BuildContext context) async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!context.mounted) return;
+
     if (!serviceEnabled) {
       _showSnack(context, 'Aktifkan layanan lokasi terlebih dahulu.');
       return;
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
+    if (!context.mounted) return;
+
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+      if (!context.mounted) return;
     }
 
     if (permission == LocationPermission.deniedForever ||
@@ -90,28 +99,84 @@ class NavigationController extends ChangeNotifier {
           color: Colors.green,
         );
 
-  Future<WeatherData?> fetchWeather(
-    BuildContext context,
-    double lat,
-    double lon,
-    String name,
-  ) async {
+  Future<List<WeatherData>?> fetchSumbingWeather(BuildContext context) async {
+    if (isFetchingWeather) return null;
+
+    isFetchingWeather = true;
+    notifyListeners();
+
     try {
-      final res = await http.get(
-        Uri.parse(
-          'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey&units=metric',
+      return Future.wait([
+        _fetchWeather(
+          lat: basecampKaliangkrik.latitude,
+          lon: basecampKaliangkrik.longitude,
+          name: 'Basecamp Kaliangkrik',
+          elevation: basecampElevation,
         ),
-      );
-      if (res.statusCode == 200) {
-        final data = json.decode(res.body);
-        return WeatherData.fromJson(data, name);
-      } else {
-        throw Exception('Gagal memuat data cuaca (${res.statusCode})');
-      }
+        _fetchWeather(
+          lat: puncakSumbing.latitude,
+          lon: puncakSumbing.longitude,
+          name: 'Puncak Gunung Sumbing',
+          elevation: summitElevation,
+        ),
+      ]);
     } catch (e) {
-      _showSnack(context, 'Error cuaca: $e');
+      if (context.mounted) {
+        _showSnack(
+          context,
+          'Gagal memuat cuaca Gunung Sumbing. Periksa koneksi internet.',
+        );
+      }
       return null;
+    } finally {
+      isFetchingWeather = false;
+      notifyListeners();
     }
+  }
+
+  Future<WeatherData> _fetchWeather({
+    required double lat,
+    required double lon,
+    required String name,
+    required double elevation,
+  }) async {
+    final uri = Uri.https('api.open-meteo.com', '/v1/forecast', {
+      'latitude': lat.toStringAsFixed(4),
+      'longitude': lon.toStringAsFixed(4),
+      'elevation': elevation.toStringAsFixed(0),
+      'current':
+          'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,'
+          'precipitation,rain,weather_code,cloud_cover,wind_speed_10m,'
+          'wind_direction_10m,wind_gusts_10m',
+      'hourly':
+          'temperature_2m,precipitation_probability,precipitation,'
+          'weather_code,wind_speed_10m,wind_gusts_10m',
+      'forecast_hours': '6',
+      'timezone': 'auto',
+      'wind_speed_unit': 'kmh',
+      'precipitation_unit': 'mm',
+    });
+
+    final res = await http.get(uri).timeout(_weatherTimeout);
+    final decoded = json.decode(res.body);
+
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException('Response cuaca tidak valid');
+    }
+
+    if (res.statusCode != 200) {
+      final reason = decoded['reason'];
+      final message = reason is String && reason.isNotEmpty
+          ? reason
+          : 'Status ${res.statusCode}';
+      throw Exception(message);
+    }
+
+    return WeatherData.fromOpenMeteo(
+      decoded,
+      name,
+      fallbackElevation: elevation,
+    );
   }
 
   void _showSnack(BuildContext context, String msg) {

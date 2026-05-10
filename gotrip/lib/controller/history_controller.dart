@@ -9,7 +9,7 @@ class HistoryController extends GetxController {
   final historyList = <TicketModel>[].obs;
   final isLoading = false.obs;
 
-  final String baseUrl = 'http://10.100.229.109:8080';
+  final String baseUrl = 'http://10.21.31.143:8080';
 
   @override
   void onInit() {

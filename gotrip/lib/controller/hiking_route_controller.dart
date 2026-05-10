@@ -11,7 +11,7 @@ class HikingRouteController extends GetxController {
   final isLoading = false.obs;
   final errorMessage = ''.obs;
 
-  final String baseUrl = 'http://10.100.229.109:8080';
+  final String baseUrl = 'http://10.21.31.143:8080';
 
   bool get hasOpenRoutes => routes.any((route) => route.isOpen);
 

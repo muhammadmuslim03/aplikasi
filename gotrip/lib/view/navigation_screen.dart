@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import '../controller/navigation_controller.dart';
@@ -109,7 +110,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 10,
           ),
@@ -131,69 +132,355 @@ class _NavigationScreenState extends State<NavigationScreen> {
     ),
   );
 
-  Widget _buildWeatherButton(BuildContext context, NavigationController c) =>
-      Positioned(
-        top: MediaQuery.of(context).padding.top + 150,
-        right: 16,
-        child: FloatingActionButton(
-          mini: true,
-          onPressed: () async {
-            final basecamp = await c.fetchWeather(
-              context,
-              c.basecampKaliangkrik.latitude,
-              c.basecampKaliangkrik.longitude,
-              'Basecamp Kaliangkrik',
-            );
-            final summit = await c.fetchWeather(
-              context,
-              c.puncakSumbing.latitude,
-              c.puncakSumbing.longitude,
-              'Puncak Sumbing',
-            );
+  Widget _buildWeatherButton(
+    BuildContext context,
+    NavigationController c,
+  ) => Positioned(
+    top: MediaQuery.of(context).padding.top + 150,
+    right: 16,
+    child: FloatingActionButton(
+      heroTag: 'weatherButton',
+      tooltip: 'Cuaca Gunung Sumbing',
+      mini: true,
+      onPressed: c.isFetchingWeather
+          ? null
+          : () async {
+              final weather = await c.fetchSumbingWeather(context);
+              if (!context.mounted || weather == null || weather.length < 2) {
+                return;
+              }
 
-            if (basecamp != null && summit != null) {
+              final basecamp = weather[0];
+              final summit = weather[1];
+
               showModalBottomSheet(
                 context: context,
+                isScrollControlled: true,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 ),
-                builder: (_) => _weatherSheet(basecamp, summit),
+                builder: (sheetContext) =>
+                    _weatherSheet(sheetContext, basecamp, summit),
               );
-            }
-          },
-          backgroundColor: Colors.white,
-          child: const Icon(Icons.wb_sunny, color: Colors.orange),
-        ),
-      );
+            },
+      backgroundColor: Colors.white,
+      child: c.isFetchingWeather
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.orange,
+              ),
+            )
+          : const Icon(Icons.cloud_outlined, color: Colors.orange),
+    ),
+  );
 
-  Widget _weatherSheet(WeatherData basecamp, WeatherData summit) => Container(
-    padding: const EdgeInsets.all(20),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text(
-          'Kondisi Cuaca Pendakian',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  Widget _weatherSheet(
+    BuildContext sheetContext,
+    WeatherData basecamp,
+    WeatherData summit,
+  ) => SafeArea(
+    child: ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(sheetContext).size.height * 0.82,
+      ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Cuaca Gunung Sumbing',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Tutup',
+                  onPressed: () => Navigator.of(sheetContext).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _weatherCard(
+              basecamp,
+              icon: Icons.cabin,
+              color: const Color(0xFF1D4F44),
+            ),
+            const SizedBox(height: 12),
+            _weatherCard(summit, icon: Icons.terrain, color: Colors.red),
+            const SizedBox(height: 18),
+            _forecastSection(summit),
+            const SizedBox(height: 14),
+            _weatherNote(),
+          ],
         ),
-        const SizedBox(height: 16),
-        _weatherRow('🏕️', basecamp),
+      ),
+    ),
+  );
+
+  Widget _weatherCard(
+    WeatherData data, {
+    required IconData icon,
+    required Color color,
+  }) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.06),
+      border: Border.all(color: color.withValues(alpha: 0.18)),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: color,
+              child: Icon(icon, color: Colors.white, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.locationName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${data.elevation.toStringAsFixed(0)} mdpl - ${_formatWeatherTime(data.time)}',
+                    style: TextStyle(color: Colors.grey[700], fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              _weatherIcon(data.weatherCode, isDay: data.isDay),
+              color: color,
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        Text(
+          _formatTemperature(data.temperature),
+          style: TextStyle(
+            color: color,
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          data.condition,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+        ),
         const SizedBox(height: 12),
-        _weatherRow('⛰️', summit),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _weatherMetric(
+              Icons.thermostat,
+              'Terasa',
+              _formatTemperature(data.apparentTemperature),
+            ),
+            _weatherMetric(
+              Icons.opacity,
+              'Hujan',
+              '${data.precipitation.toStringAsFixed(1)} mm',
+            ),
+            _weatherMetric(Icons.water_drop, 'Lembap', '${data.humidity}%'),
+            _weatherMetric(
+              Icons.air,
+              'Angin',
+              '${data.windSpeed.toStringAsFixed(0)} km/jam',
+            ),
+            _weatherMetric(
+              Icons.speed,
+              'Hembusan',
+              '${data.windGusts.toStringAsFixed(0)} km/jam',
+            ),
+            _weatherMetric(Icons.cloud, 'Awan', '${data.cloudCover}%'),
+          ],
+        ),
       ],
     ),
   );
 
-  Widget _weatherRow(String emoji, WeatherData data) => Row(
-    children: [
-      Text(emoji, style: const TextStyle(fontSize: 32)),
-      const SizedBox(width: 12),
-      Expanded(
-        child: Text(
-          '${data.locationName}\n${data.temperature.toStringAsFixed(1)}°C - ${data.condition}',
+  Widget _weatherMetric(IconData icon, String label, String value) => Container(
+    width: 140,
+    padding: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: Colors.white.withValues(alpha: 0.76),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey[700]),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.grey[700], fontSize: 11),
+              ),
+              Text(
+                value,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    ],
+      ],
+    ),
   );
+
+  Widget _forecastSection(WeatherData summit) {
+    if (summit.hourlyForecast.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Prakiraan Puncak 6 Jam',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        ...summit.hourlyForecast.map(_forecastRow),
+      ],
+    );
+  }
+
+  Widget _forecastRow(WeatherForecastHour forecast) => Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF5F7F6),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      children: [
+        SizedBox(
+          width: 44,
+          child: Text(
+            _formatHour(forecast.time),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        Icon(_weatherIcon(forecast.weatherCode), size: 20),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                forecast.condition,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'Hujan ${forecast.precipitationProbability}% - angin ${forecast.windSpeed.toStringAsFixed(0)} km/jam',
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.grey[700], fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          _formatTemperature(forecast.temperature),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
+
+  Widget _weatherNote() => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.amber[50],
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.amber.shade200),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.warning_amber_rounded, color: Colors.amber[800], size: 20),
+        const SizedBox(width: 10),
+        const Expanded(
+          child: Text(
+            'Prakiraan dapat berubah cepat di gunung. Konfirmasi kondisi terakhir ke petugas basecamp sebelum mulai pendakian.',
+            style: TextStyle(fontSize: 12, height: 1.35),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  IconData _weatherIcon(int weatherCode, {bool isDay = true}) {
+    if (weatherCode == 0) return isDay ? Icons.wb_sunny : Icons.nights_stay;
+    if (weatherCode == 45 || weatherCode == 48) return Icons.blur_on;
+    if (weatherCode >= 95) return Icons.flash_on;
+    if (_isRainCode(weatherCode)) return Icons.grain;
+    return Icons.wb_cloudy;
+  }
+
+  bool _isRainCode(int weatherCode) {
+    const rainCodes = <int>{
+      51,
+      53,
+      55,
+      56,
+      57,
+      61,
+      63,
+      65,
+      66,
+      67,
+      71,
+      73,
+      75,
+      77,
+      80,
+      81,
+      82,
+      85,
+      86,
+    };
+
+    return rainCodes.contains(weatherCode);
+  }
+
+  String _formatWeatherTime(DateTime time) =>
+      DateFormat('dd MMM HH:mm', 'id').format(time);
+
+  String _formatHour(DateTime time) => DateFormat('HH:mm', 'id').format(time);
+
+  String _formatTemperature(double temperature) =>
+      '${temperature.toStringAsFixed(1)}°C';
 
   Widget _buildTrackingButton(NavigationController c) => Positioned(
     top: MediaQuery.of(context).padding.top + 200,

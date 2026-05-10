@@ -13,7 +13,7 @@ class LoginController extends GetxController {
 
   final box = GetStorage();
 
-  final String baseUrl = 'http://10.100.229.109:8080';
+  final String baseUrl = 'http://10.21.31.143:8080';
 
   Future<void> login() async {
     if (email.value.isEmpty || password.value.isEmpty) {

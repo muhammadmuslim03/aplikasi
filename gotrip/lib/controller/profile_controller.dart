@@ -14,7 +14,7 @@ class ProfileController extends GetxController {
   var isUpdating = false.obs;
 
   final box = GetStorage();
-  final String baseUrl = 'http://10.100.229.109:8080';
+  final String baseUrl = 'http://10.21.31.143:8080';
 
   @override
   void onInit() {
@@ -30,7 +30,6 @@ class ProfileController extends GetxController {
     role.value = box.read('role') ?? 'pendaki';
   }
 
-  // Update nama saja secara lokal + API
   Future<void> updateProfile({
     required String newName,
     required String newPhone,

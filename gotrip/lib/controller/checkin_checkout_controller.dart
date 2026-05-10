@@ -6,7 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class CheckinCheckoutController extends GetxController {
-  final String baseUrl = 'http://10.100.229.109:8080';
+  final String baseUrl = 'http://10.21.31.143:8080';
 
   final isSubmitting = false.obs;
   final lastMessage = ''.obs;

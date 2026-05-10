@@ -26,7 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Inisialisasi dari controller (data sudah di-load dari storage)
     nameController = TextEditingController(text: controller.name.value);
     emailController = TextEditingController(text: controller.email.value);
     phoneController = TextEditingController(text: controller.phone.value);
@@ -68,7 +67,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // ── Avatar ──
             Stack(
               alignment: Alignment.bottomRight,
               children: [
@@ -99,7 +97,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 8),
 
-            // Nama dan role
             Obx(() => Text(
                   controller.name.value.isNotEmpty
                       ? controller.name.value
@@ -146,7 +143,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _sectionLabel('Informasi Pribadi'),
                   const SizedBox(height: 16),
 
-                  // Nama Lengkap (editable)
                   _buildTextField(
                     label: 'Nama Lengkap',
                     controller: nameController,
@@ -154,7 +150,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 14),
 
-                  // No. HP (editable)
                   _buildTextField(
                     label: 'Nomor HP',
                     controller: phoneController,
@@ -167,7 +162,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 14),
 
-                  // Email (read-only)
                   _buildTextField(
                     label: 'Email',
                     controller: emailController,
@@ -177,7 +171,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 14),
 
-                  // NIK (read-only — data identitas tidak boleh diubah sembarangan)
                   _buildTextField(
                     label: 'NIK / Nomor Paspor',
                     controller: nikController,
@@ -187,7 +180,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Tombol Simpan
                   Obx(() => SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
@@ -229,7 +221,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 16),
 
-            // ── Tombol Logout ──
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
