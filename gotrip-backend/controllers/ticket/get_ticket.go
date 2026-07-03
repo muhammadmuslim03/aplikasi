@@ -33,7 +33,9 @@ func GetBookings(c *gin.Context) {
 
 	attachPaymentFields(bookings)
 
-	c.JSON(http.StatusOK, bookings)
+	c.JSON(http.StatusOK, gin.H{
+		"tickets": bookings,
+	})
 }
 
 func GetAllTicketsAdmin(c *gin.Context) {

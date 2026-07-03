@@ -23,14 +23,16 @@ type Booking struct {
 	IncludeOjek bool `json:"include_ojek"`
 	OjekCount   int  `json:"ojek_count"`
 
-	Status        string     `gorm:"type:varchar(40);default:'pending'" json:"status"`
-	RejectNote    *string    `json:"reject_note"`
-	CheckedInAt   *time.Time `json:"checked_in_at"`
-	CheckedOutAt  *time.Time `json:"checked_out_at"`
-	Payment       *Payment   `json:"payment,omitempty"`
-	ProofImage    string     `gorm:"-" json:"proof_image,omitempty"`
-	PaymentMethod string     `gorm:"-" json:"payment_method,omitempty"`
-	PaymentStatus string     `gorm:"-" json:"payment_status,omitempty"`
+	Status       string     `gorm:"type:varchar(40);default:'pending'" json:"status"`
+	QRCodeData   *string    `gorm:"type:text" json:"qr_code_data"`
+	ProofImage   string     `json:"proof_image,omitempty"`
+	RejectNote   *string    `json:"reject_note"`
+	CheckedInAt  *time.Time `json:"checked_in_at"`
+	CheckedOutAt *time.Time `json:"checked_out_at"`
+	Payment      *Payment   `gorm:"foreignKey:BookingID" json:"payment,omitempty"`
+
+	PaymentMethod string `gorm:"-" json:"payment_method,omitempty"`
+	PaymentStatus string `gorm:"-" json:"payment_status,omitempty"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

@@ -47,12 +47,13 @@ func UploadProof(c *gin.Context) {
 		}
 	}
 
-	payment.Method = paymentMethod
+	payment.PaymentMethod = paymentMethod
 	payment.ProofImage = filePath
 	payment.Status = "waiting_verification"
 	payment.RejectNote = nil
 
 	booking.Status = "waiting_verification"
+	booking.ProofImage = filePath
 	booking.RejectNote = nil
 
 	err = config.DB.Transaction(func(tx *gorm.DB) error {

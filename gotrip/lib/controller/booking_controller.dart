@@ -5,9 +5,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-import '../model/payment_model.dart';
+import '../config/api_config.dart';
 import '../model/ticket_model.dart';
-import '../view/payment_proof_screen.dart';
 import 'hiking_route_controller.dart';
 
 class BookingController extends GetxController {
@@ -35,9 +34,6 @@ class BookingController extends GetxController {
     symbol: 'Rp ',
     decimalDigits: 0,
   );
-
-  final String baseUrl = 'http://10.21.31.143:8080';
-
   @override
   void onInit() {
     super.onInit();
@@ -89,16 +85,18 @@ class BookingController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/bookings'),
+        ApiConfig.uri('/api/tickets'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        historyList.value = (data as List)
-            .map((e) => TicketModel.fromJson(e))
-            .toList();
+        final List raw = data is List
+            ? data
+            : (data['tickets'] ?? data['data'] ?? []);
+
+        historyList.value = raw.map((e) => TicketModel.fromJson(e)).toList();
       } else {
         Get.snackbar(
           'Error',
@@ -187,7 +185,7 @@ class BookingController extends GetxController {
       };
 
       final response = await http.post(
-        Uri.parse('$baseUrl/api/bookings'),
+        ApiConfig.uri('/api/tickets'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -206,30 +204,14 @@ class BookingController extends GetxController {
         return;
       }
 
-      final ticketData = jsonDecode(response.body);
-      final String ticketId = ticketData['id'];
-
-      final paymentData = PaymentModel(
-        ticketId: ticketId,
-        routeId: selectedRouteId.value,
-        routeName: selectedRouteName.value,
-        hikingDate: hikingDate.value!,
-        totalMembers: totalMembers.value,
-        totalPrice: totalPrice.value.toDouble(),
-        includeOjek: validOjek,
-        ojekCount: validOjek ? ojekCount.value : 0,
-      );
-
-      Get.to(
-        () => PaymentProofScreen(paymentData: paymentData),
-        transition: Transition.rightToLeft,
-      );
-
       await fetchHistory();
+      resetForm();
+
+      Get.offAllNamed('/home', arguments: {'tab': 1});
 
       Get.snackbar(
         'Sukses',
-        'Booking berhasil dibuat',
+        'Booking berhasil dibuat. Lanjutkan pembayaran dari riwayat tiket.',
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );

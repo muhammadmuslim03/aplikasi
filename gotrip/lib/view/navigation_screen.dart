@@ -43,52 +43,56 @@ class _NavigationScreenState extends State<NavigationScreen> {
     );
   }
 
-  Widget _buildMap(NavigationController c) => FlutterMap(
-    mapController: c.mapController,
-    options: MapOptions(
-      initialCenter: LatLng(
-        (c.basecampKaliangkrik.latitude + c.puncakSumbing.latitude) / 2,
-        (c.basecampKaliangkrik.longitude + c.puncakSumbing.longitude) / 2,
+  Widget _buildMap(NavigationController c) {
+    final routePoints = c.routePoints;
+
+    return FlutterMap(
+      mapController: c.mapController,
+      options: MapOptions(
+        initialCameraFit: CameraFit.bounds(
+          bounds: LatLngBounds.fromPoints(routePoints),
+          padding: const EdgeInsets.fromLTRB(32, 120, 32, 250),
+          maxZoom: 15,
+        ),
       ),
-      initialZoom: 13,
-    ),
-    children: [
-      TileLayer(
-        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        userAgentPackageName: 'com.example.new_gotrip',
-      ),
-      PolylineLayer(
-        polylines: [
-          Polyline(
-            points: [
-              c.basecampKaliangkrik,
-              c.pos1,
-              c.pos2,
-              c.pos3,
-              c.puncakSumbing,
-            ],
-            color: c.selectedRoute == 'normal' ? Colors.green : Colors.orange,
-            strokeWidth: 4,
-          ),
-        ],
-      ),
-      MarkerLayer(
-        markers: [
-          _marker(c.basecampKaliangkrik, Colors.blue, Icons.cabin),
-          _marker(c.pos1, Colors.orange, Icons.flag),
-          _marker(c.pos2, Colors.orange, Icons.flag),
-          _marker(c.pos3, Colors.orange, Icons.flag),
-          _marker(c.puncakSumbing, Colors.red, Icons.landscape),
-          if (c.currentPosition != null)
-            _marker(
-              LatLng(c.currentPosition!.latitude, c.currentPosition!.longitude),
-              Colors.purple,
-              Icons.person_pin_circle,
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.example.new_gotrip',
+        ),
+        PolylineLayer(
+          polylineCulling: true,
+          polylines: [
+            Polyline(
+              points: routePoints,
+              color: c.selectedRoute == 'normal' ? Colors.green : Colors.orange,
+              strokeWidth: 5,
+              borderStrokeWidth: 2,
+              borderColor: Colors.white.withValues(alpha: 0.9),
             ),
-        ],
-      ),
-    ],
-  );
+          ],
+        ),
+        MarkerLayer(
+          markers: [
+            _marker(c.basecampKaliangkrik, Colors.blue, Icons.cabin),
+            _marker(c.pos1, Colors.orange, Icons.flag),
+            _marker(c.pos2, Colors.orange, Icons.flag),
+            _marker(c.pos3, Colors.orange, Icons.flag),
+            _marker(c.puncakSumbing, Colors.red, Icons.landscape),
+            if (c.currentPosition != null)
+              _marker(
+                LatLng(
+                  c.currentPosition!.latitude,
+                  c.currentPosition!.longitude,
+                ),
+                Colors.purple,
+                Icons.person_pin_circle,
+              ),
+          ],
+        ),
+      ],
+    );
+  }
 
   Marker _marker(LatLng point, Color color, IconData icon) => Marker(
     point: point,

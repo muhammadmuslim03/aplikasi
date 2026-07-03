@@ -85,7 +85,7 @@ func AdminVerifyPayment(c *gin.Context) {
 	}
 
 	booking.ProofImage = booking.Payment.ProofImage
-	booking.PaymentMethod = booking.Payment.Method
+	booking.PaymentMethod = booking.Payment.PaymentMethod
 	booking.PaymentStatus = booking.Payment.Status
 
 	c.JSON(http.StatusOK, gin.H{

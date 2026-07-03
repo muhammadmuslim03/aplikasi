@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
-class CheckinCheckoutController extends GetxController {
-  final String baseUrl = 'http://10.21.31.143:8080';
+import '../config/api_config.dart';
 
+class CheckinCheckoutController extends GetxController {
   final isSubmitting = false.obs;
   final lastMessage = ''.obs;
 
@@ -29,7 +29,7 @@ class CheckinCheckoutController extends GetxController {
 
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/checkpoint/scan'),
+        ApiConfig.uri('/api/checkpoint/scan'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

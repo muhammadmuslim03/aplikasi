@@ -4,17 +4,18 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../config/api_config.dart';
+
 class ProfileController extends GetxController {
   var name = ''.obs;
   var email = ''.obs;
   var phone = ''.obs;
-  var identityNumber = ''.obs; 
+  var identityNumber = ''.obs;
   var role = ''.obs;
 
   var isUpdating = false.obs;
 
   final box = GetStorage();
-  final String baseUrl = 'http://10.21.31.143:8080';
 
   @override
   void onInit() {
@@ -41,15 +42,12 @@ class ProfileController extends GetxController {
 
     try {
       final response = await http.patch(
-        Uri.parse('$baseUrl/api/users/profile'),
+        ApiConfig.uri('/api/users/profile'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({
-          'name': newName,
-          'phone': newPhone,
-        }),
+        body: jsonEncode({'name': newName, 'phone': newPhone}),
       );
 
       if (response.statusCode == 200) {

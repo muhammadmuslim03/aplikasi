@@ -1,10 +1,12 @@
+import 'ticket_model.dart';
+
 class PaymentModel {
-  final String ticketId;  
-  final int routeId;        
-  final String routeName; 
+  final String ticketId;
+  final int routeId;
+  final String routeName;
   final DateTime hikingDate;
-  final int totalMembers; 
-  final double totalPrice;     
+  final int totalMembers;
+  final double totalPrice;
   final bool includeOjek;
   final int ojekCount;
   final String? proofImagePath;
@@ -20,6 +22,19 @@ class PaymentModel {
     this.ojekCount = 0,
     this.proofImagePath,
   });
+
+  factory PaymentModel.fromTicket(TicketModel ticket) {
+    return PaymentModel(
+      ticketId: ticket.id,
+      routeId: ticket.routeId,
+      routeName: ticket.routeName ?? '',
+      hikingDate: ticket.hikingDate,
+      totalMembers: ticket.totalMembers,
+      totalPrice: ticket.totalPrice,
+      includeOjek: ticket.includeOjek,
+      ojekCount: ticket.ojekCount,
+    );
+  }
 
   PaymentModel copyWith({
     String? ticketId,
@@ -50,7 +65,8 @@ class PaymentModel {
       ticketId: json['id'] ?? '',
       routeId: json['route_id'] ?? 0,
       routeName: json['route_name'] ?? '',
-      hikingDate: DateTime.tryParse(json['hiking_date'] ?? '') ?? DateTime.now(),
+      hikingDate:
+          DateTime.tryParse(json['hiking_date'] ?? '') ?? DateTime.now(),
       totalMembers: json['total_members'] ?? 1,
       totalPrice: (json['total_price'] ?? 0).toDouble(),
       includeOjek: json['include_ojek'] ?? false,

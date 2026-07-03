@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../config/api_config.dart';
 import '../model/user_model.dart';
 
 class LoginController extends GetxController {
@@ -12,9 +13,6 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
 
   final box = GetStorage();
-
-  final String baseUrl = 'http://10.21.31.143:8080';
-
   Future<void> login() async {
     if (email.value.isEmpty || password.value.isEmpty) {
       Get.snackbar(
@@ -30,7 +28,7 @@ class LoginController extends GetxController {
 
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/login'),
+        ApiConfig.uri('/auth/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email.value,
@@ -50,7 +48,7 @@ class LoginController extends GetxController {
         // Simpan ke local storage
         box.write('token', token);
         box.write('user_id', user.id);
-        box.write('name', user.name);           // Pakai 'name', bukan 'username'
+        box.write('name', user.name);
         box.write('email', user.email);
         box.write('phone', user.phone ?? '');
         box.write('role', user.role);

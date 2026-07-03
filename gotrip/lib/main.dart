@@ -58,7 +58,16 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/register', page: () => const RegisterScreen()),
         GetPage(name: '/forgot', page: () => const ForgotPasswordScreen()),
-        GetPage(name: '/home', page: () => const BottomNavigation()),
+        GetPage(
+          name: '/home',
+          page: () {
+            final args = Get.arguments;
+            final tab = args is Map<String, dynamic>
+                ? args['tab'] as int?
+                : null;
+            return BottomNavigation(initialIndex: tab ?? 0);
+          },
+        ),
       ],
     );
   }

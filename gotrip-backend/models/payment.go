@@ -8,12 +8,23 @@ import (
 )
 
 type Payment struct {
-	ID         string     `gorm:"type:uuid;primaryKey" json:"id"`
-	BookingID  string     `gorm:"type:uuid;index;unique" json:"booking_id"`
-	UserID     uint       `json:"user_id"`
-	Method     string     `json:"method"`
+	ID        string `gorm:"type:uuid;primaryKey" json:"id"`
+	BookingID string `gorm:"type:uuid;index;unique" json:"ticket_id"`
+	UserID    uint   `json:"user_id"`
+
+	Provider              string     `gorm:"type:varchar(40);default:'manual'" json:"provider"`
+	ProviderTransactionID string     `gorm:"type:varchar(120);index" json:"provider_transaction_id"`
+	PaymentMethod         string     `gorm:"column:method" json:"payment_method"`
+	Amount                float64    `json:"amount"`
+	Status                string     `gorm:"type:varchar(40);default:'pending'" json:"status"`
+	PaymentURL            string     `gorm:"type:text" json:"payment_url"`
+	SnapToken             string     `gorm:"type:text" json:"snap_token"`
+	VANumber              string     `gorm:"type:varchar(120)" json:"va_number"`
+	QRString              string     `gorm:"type:text" json:"qr_string"`
+	ExpiredAt             *time.Time `json:"expired_at"`
+	PaidAt                *time.Time `json:"paid_at"`
+
 	ProofImage string     `json:"proof_image"`
-	Status     string     `gorm:"type:varchar(40);default:'pending'" json:"status"`
 	RejectNote *string    `json:"reject_note"`
 	VerifiedAt *time.Time `json:"verified_at"`
 	CreatedAt  time.Time  `json:"created_at"`

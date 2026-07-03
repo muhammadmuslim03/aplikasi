@@ -13,6 +13,7 @@ import (
 	userController "gotrip-backend/controllers/user"
 
 	"gotrip-backend/middlewares"
+	"gotrip-backend/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -57,8 +58,8 @@ func main() {
 		api.GET("/bookings", ticketController.GetBookings)
 		api.GET("/hiking-routes", routeController.GetHikingRoutes)
 		api.PATCH("/bookings/:id/proof", ticketController.UploadProof)
-		api.POST("/tickets", ticketController.CreateTicket)
-		api.GET("/tickets", ticketController.GetTickets)
+		routes.RegisterTicketRoutes(api)
+		routes.RegisterPaymentRoutes(api)
 		api.PATCH("/tickets/:id/proof", ticketController.UploadProof)
 		api.POST("/checkpoint/scan", checkpointController.ScanBarcode)
 
@@ -93,6 +94,8 @@ func main() {
 			admin.POST("/register", authController.RegisterAdmin)
 		}
 	}
+
+	routes.RegisterPaymentWebhook(r)
 
 	r.Run("0.0.0.0:8080")
 }

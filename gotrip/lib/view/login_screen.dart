@@ -11,7 +11,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Controller di-put di sini agar lifecycle terikat ke screen ini
   final LoginController controller = Get.put(LoginController());
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
@@ -251,3 +250,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

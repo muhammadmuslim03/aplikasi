@@ -68,25 +68,13 @@ func createBooking(c *gin.Context) {
 		Status: "pending",
 	}
 
-	var payment models.Payment
-	err = config.DB.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(&booking).Error; err != nil {
-			return err
-		}
-
-		payment = models.Payment{
-			BookingID: booking.ID,
-			UserID:    userID,
-			Status:    "pending",
-		}
-
-		return tx.Create(&payment).Error
-	})
-	if err != nil {
+	if err := config.DB.Create(&booking).Error; err != nil {
 		c.JSON(500, gin.H{"error": "Gagal membuat booking"})
 		return
 	}
 
-	booking.Payment = &payment
-	c.JSON(201, booking)
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Booking berhasil dibuat",
+		"ticket":  booking,
+	})
 }

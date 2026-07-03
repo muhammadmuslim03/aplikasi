@@ -11,8 +11,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtSecret = []byte("your-secret-key-go-trip-2025")
-
 func Login(c *gin.Context) {
 	var input models.LoginRequest
 
@@ -52,7 +50,7 @@ func Login(c *gin.Context) {
 		"exp":     time.Now().Add(time.Hour * 24 * 7).Unix(),
 	})
 
-	tokenString, _ := token.SignedString(jwtSecret)
+	tokenString, _ := token.SignedString(config.JWTSecret())
 
 	c.JSON(200, models.AuthResponse{
 		Token: tokenString,

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../config/api_config.dart';
+
 class RegisterController extends GetxController {
   var name = ''.obs;
   var email = ''.obs;
   var phone = ''.obs;
-  var NIK = ''.obs; 
+  var NIK = ''.obs;
   var password = ''.obs;
   var confirmPassword = ''.obs;
   var isLoading = false.obs;
-
-  final String baseUrl = 'http://10.21.31.143:8080';
 
   Future<void> register() async {
     if (name.value.isEmpty ||
@@ -44,15 +44,15 @@ class RegisterController extends GetxController {
 
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/register'),
+        ApiConfig.uri('/auth/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'name': name.value,                       
+          'name': name.value,
           'email': email.value,
-          'phone': phone.value,                    
-          'NIK': NIK.value,  
+          'phone': phone.value,
+          'NIK': NIK.value,
           'password': password.value,
-          'role': 'pendaki',                     
+          'role': 'pendaki',
         }),
       );
 

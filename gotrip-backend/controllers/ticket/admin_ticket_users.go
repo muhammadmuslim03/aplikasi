@@ -61,8 +61,10 @@ func attachPaymentField(booking *models.Booking) {
 		return
 	}
 
-	booking.ProofImage = booking.Payment.ProofImage
-	booking.PaymentMethod = booking.Payment.Method
+	if booking.ProofImage == "" {
+		booking.ProofImage = booking.Payment.ProofImage
+	}
+	booking.PaymentMethod = booking.Payment.PaymentMethod
 	booking.PaymentStatus = booking.Payment.Status
 
 	if booking.RejectNote == nil {

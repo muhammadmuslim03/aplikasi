@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 import '../model/payment_model.dart';
 
 class PaymentController extends GetxController {
@@ -16,7 +17,6 @@ class PaymentController extends GetxController {
   RxBool isUploading = false.obs;
 
   final ImagePicker _picker = ImagePicker();
-  final String baseUrl = 'http://10.21.31.143:8080';
 
   final List<Map<String, String>> paymentMethods = [
     {'label': 'BCA', 'account': '513-301-6782 a.n Muhammad Muslim'},
@@ -73,7 +73,7 @@ class PaymentController extends GetxController {
     try {
       final request = http.MultipartRequest(
         'PATCH',
-        Uri.parse('$baseUrl/api/bookings/$ticketId/proof'),
+        ApiConfig.uri('/api/bookings/$ticketId/proof'),
       );
 
       request.headers['Authorization'] = 'Bearer $token';

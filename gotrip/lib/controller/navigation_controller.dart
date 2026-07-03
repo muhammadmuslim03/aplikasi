@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
+import '../data/sumbing_route_points.dart';
 import '../model/weather_model.dart';
 import '../model/route_model.dart';
 
@@ -19,13 +20,14 @@ class NavigationController extends ChangeNotifier {
   static const double summitElevation = 3371;
   static const Duration _weatherTimeout = Duration(seconds: 10);
 
-  final LatLng basecampKaliangkrik = const LatLng(-7.3800, 110.1500);
-  final LatLng pos1 = const LatLng(-7.3820, 110.1400);
-  final LatLng pos2 = const LatLng(-7.3835, 110.1300);
-  final LatLng pos3 = const LatLng(-7.3840, 110.1200);
-  final LatLng puncakSumbing = const LatLng(-7.3847, 110.0755);
+  final LatLng basecampKaliangkrik = sumbingViaButuhRoutePoints.first;
+  final LatLng pos1 = const LatLng(-7.410304, 110.077590);
+  final LatLng pos2 = const LatLng(-7.398764, 110.077683);
+  final LatLng pos3 = const LatLng(-7.384382, 110.084569);
+  final LatLng puncakSumbing = sumbingViaButuhRoutePoints.last;
 
-  /// Cek izin lokasi dan mulai tracking.
+  List<LatLng> get routePoints => sumbingViaButuhRoutePoints;
+
   Future<void> checkPermissionAndStartTracking(BuildContext context) async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!context.mounted) return;

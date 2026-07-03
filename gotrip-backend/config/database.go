@@ -13,7 +13,9 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	dsn := "host=localhost user=postgres password=secret dbname=gotrip_db port=5432 sslmode=disable"
+	LoadEnv()
+
+	dsn := DatabaseDSN()
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})

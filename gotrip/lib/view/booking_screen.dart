@@ -29,7 +29,6 @@ class _BookingScreenState extends State<BookingScreen> {
         : Get.put(HikingRouteController(), permanent: true);
     routeController.fetchRoutes();
 
-    // Jika dipanggil dari HomeScreen dengan argument route
     final args = Get.arguments as Map<String, dynamic>?;
     if (args != null) {
       controller.selectRoute(
@@ -111,7 +110,6 @@ class _BookingScreenState extends State<BookingScreen> {
               _sectionLabel('Jalur Pendakian'),
               const SizedBox(height: 12),
 
-              // Dropdown jalur (route_id dari hiking_routes)
               _buildRouteSelector(),
 
               const SizedBox(height: 20),
@@ -120,7 +118,6 @@ class _BookingScreenState extends State<BookingScreen> {
               _sectionLabel('Detail Pemesanan'),
               const SizedBox(height: 12),
 
-              // Pilih Tanggal Pendakian (hiking_date)
               InkWell(
                 onTap: () async {
                   final picked = await showDatePicker(
@@ -211,7 +208,6 @@ class _BookingScreenState extends State<BookingScreen> {
 
               const SizedBox(height: 16),
 
-              // Tambah layanan ojek yang disimpan di tabel bookings
               CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 title: const Text(
@@ -307,7 +303,6 @@ class _BookingScreenState extends State<BookingScreen> {
 
               const SizedBox(height: 24),
 
-              // ── Tombol Pesan ──
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

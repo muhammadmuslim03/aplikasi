@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../controller/history_controller.dart';
 import '../model/ticket_model.dart';
+import 'eticket_screen.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -85,7 +86,12 @@ class HistoryScreen extends StatelessWidget {
             itemCount: controller.historyList.length,
             itemBuilder: (context, index) {
               final ticket = controller.historyList[index];
-              return _buildTicketCard(ticket, dateFormat, rupiahFormat);
+              return _buildTicketCard(
+                controller,
+                ticket,
+                dateFormat,
+                rupiahFormat,
+              );
             },
           ),
         );
@@ -101,6 +107,7 @@ class HistoryScreen extends StatelessWidget {
   }
 
   Widget _buildTicketCard(
+    HistoryController controller,
     TicketModel ticket,
     DateFormat dateFormat,
     NumberFormat rupiahFormat,
@@ -118,7 +125,7 @@ class HistoryScreen extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             blurRadius: 8,
-            color: Colors.black.withOpacity(0.07),
+            color: Colors.black.withValues(alpha: 0.07),
             offset: const Offset(0, 3),
           ),
         ],
@@ -152,7 +159,7 @@ class HistoryScreen extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
+                    color: Colors.white.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -216,6 +223,9 @@ class HistoryScreen extends StatelessWidget {
                   rupiahFormat.format(ticket.totalPrice),
                   isHighlight: true,
                 ),
+
+                const SizedBox(height: 14),
+                _ticketAction(controller, ticket),
 
                 if (isRejected) ...[
                   const SizedBox(height: 12),
@@ -319,33 +329,125 @@ class HistoryScreen extends StatelessWidget {
       children: [
         Icon(icon, size: 16, color: const Color(0xFF1D4F44)),
         const SizedBox(width: 8),
-        Text(label, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
-        const Spacer(),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: isHighlight ? 15 : 13,
-            fontWeight: isHighlight ? FontWeight.bold : FontWeight.w500,
-            color: isHighlight ? const Color(0xFF1D4F44) : Colors.black87,
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: isHighlight ? 15 : 13,
+              fontWeight: isHighlight ? FontWeight.bold : FontWeight.w500,
+              color: isHighlight ? const Color(0xFF1D4F44) : Colors.black87,
+            ),
           ),
         ),
       ],
     );
   }
 
+  Widget _ticketAction(HistoryController controller, TicketModel ticket) {
+    final status = ticket.status.toLowerCase();
+
+    if (status == 'pending') {
+      return Obx(() {
+        final isProcessing = controller.processingTicketId.value == ticket.id;
+
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: isProcessing
+                ? null
+                : () => controller.continuePayment(ticket),
+            icon: isProcessing
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.payment, size: 18),
+            label: Text(
+              isProcessing ? 'Membuat Pembayaran...' : 'Lanjutkan Pembayaran',
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1D4F44),
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: Colors.grey[300],
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        );
+      });
+    }
+
+    if (status == 'paid') {
+      return SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: () => Get.to(
+            () => ETicketScreen(ticket: ticket),
+            transition: Transition.rightToLeft,
+          ),
+          icon: const Icon(Icons.qr_code_2, size: 18),
+          label: const Text('Lihat E-Ticket'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: const Color(0xFF1D4F44),
+            side: const BorderSide(color: Color(0xFF1D4F44)),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (status == 'expired') {
+      return SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: null,
+          icon: const Icon(Icons.timer_off_outlined, size: 18),
+          label: const Text('Pembayaran Kedaluwarsa'),
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
   Map<String, dynamic> _statusInfo(String status) {
     switch (status.toLowerCase()) {
       case 'paid':
-        return {'label': 'Lunas', 'color': Colors.green[600]!};
+        return {'label': 'Sudah Dibayar', 'color': Colors.green[600]!};
+      case 'expired':
+        return {'label': 'Kedaluwarsa', 'color': Colors.grey[600]!};
       case 'checked_in':
         return {'label': 'Check In', 'color': Colors.blue[600]!};
       case 'checked_out':
         return {'label': 'Selesai', 'color': Colors.teal[600]!};
       case 'cancelled':
         return {'label': 'Dibatalkan', 'color': Colors.red[400]!};
+      case 'waiting_verification':
+        return {'label': 'Menunggu Verifikasi', 'color': Colors.orange[600]!};
       case 'pending':
       default:
-        return {'label': 'Menunggu Verifikasi', 'color': Colors.orange[600]!};
+        return {'label': 'Menunggu Pembayaran', 'color': Colors.orange[600]!};
     }
   }
 }

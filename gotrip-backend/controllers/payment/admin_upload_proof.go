@@ -58,10 +58,11 @@ func AdminUploadProof(c *gin.Context) {
 		}
 	}
 
-	payment.Method = c.PostForm("payment_method")
+	payment.PaymentMethod = c.PostForm("payment_method")
 	payment.ProofImage = filename
 	payment.Status = "waiting_verification"
 	booking.Status = "waiting_verification"
+	booking.ProofImage = filename
 
 	if err := config.DB.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Save(&booking).Error; err != nil {

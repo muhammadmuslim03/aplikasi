@@ -1,0 +1,838 @@
+<mxfile host="app.diagrams.net" agent="Codex" pages="8">
+  <diagram id="flowchart-system" name="Flowchart Sistem">
+    <mxGraphModel dx="1229" dy="693" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f_title" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" value="Flowchart Sistem GoTrip" vertex="1">
+          <mxGeometry height="40" width="520" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="f_start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1" value="Mulai" vertex="1">
+          <mxGeometry height="55" width="150" x="660" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="f_choose" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontStyle=1" value="Pilih akses" vertex="1">
+          <mxGeometry height="110" width="180" x="645" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="f_mobile_open" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka aplikasi mobile GoTrip" vertex="1">
+          <mxGeometry height="65" width="280" x="180" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="f_mobile_auth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Registrasi atau login pendaki" vertex="1">
+          <mxGeometry height="65" width="280" x="180" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="f_mobile_home" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Home: tampilkan daftar jalur" vertex="1">
+          <mxGeometry height="65" width="280" x="180" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="f_mobile_action" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontStyle=1" value="Pilih aktivitas" vertex="1">
+          <mxGeometry height="110" width="210" x="215" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="f_booking" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Booking pendakian: pilih jalur, tanggal, anggota, ojek" vertex="1">
+          <mxGeometry height="80" width="305" x="70" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="f_upload" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Upload bukti pembayaran" vertex="1">
+          <mxGeometry height="65" width="305" x="70" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="f_wait" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Status waiting_verification" vertex="1">
+          <mxGeometry height="65" width="305" x="70" y="1105" as="geometry" />
+        </mxCell>
+        <mxCell id="f_paid" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Pembayaran diterima: status paid" vertex="1">
+          <mxGeometry height="65" width="290" x="430" y="1105" as="geometry" />
+        </mxCell>
+        <mxCell id="f_scan" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Scan barcode check-in / check-out" vertex="1">
+          <mxGeometry height="70" width="290" x="430" y="1235" as="geometry" />
+        </mxCell>
+        <mxCell id="f_mobile_other" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Riwayat booking, profil, navigasi GPS, dan cuaca Open-Meteo" vertex="1">
+          <mxGeometry height="85" width="305" x="70" y="1230" as="geometry" />
+        </mxCell>
+        <mxCell id="f_admin_open" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Buka web admin React" vertex="1">
+          <mxGeometry height="65" width="285" x="1010" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="f_admin_login" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Login admin" vertex="1">
+          <mxGeometry height="65" width="285" x="1010" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="f_admin_dashboard" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Dashboard admin" vertex="1">
+          <mxGeometry height="65" width="285" x="1010" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="f_admin_menu" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontStyle=1" value="Pilih menu admin" vertex="1">
+          <mxGeometry height="110" width="215" x="1045" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="f_admin_verify" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Verifikasi pembayaran: accept atau reject" vertex="1">
+          <mxGeometry height="80" width="330" x="950" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="f_admin_manage" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Kelola jalur, pendaki, barcode, dan dashboard" vertex="1">
+          <mxGeometry height="80" width="305" x="970" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="f_admin_export" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Export laporan CSV / PDF" vertex="1">
+          <mxGeometry height="65" width="305" x="970" y="1120" as="geometry" />
+        </mxCell>
+        <mxCell id="f_end" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontStyle=1" value="Selesai" vertex="1">
+          <mxGeometry height="55" width="150" x="660" y="1425" as="geometry" />
+        </mxCell>
+        <mxCell id="fe1" edge="1" parent="1" source="f_start" style="endArrow=block;html=1;rounded=0" target="f_choose">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe2" edge="1" parent="1" source="f_choose" style="endArrow=block;html=1;rounded=0" target="f_mobile_open" value="Pendaki">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe3" edge="1" parent="1" source="f_choose" style="endArrow=block;html=1;rounded=0" target="f_admin_open" value="Admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe4" edge="1" parent="1" source="f_mobile_open" style="endArrow=block;html=1;rounded=0" target="f_mobile_auth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe5" edge="1" parent="1" source="f_mobile_auth" style="endArrow=block;html=1;rounded=0" target="f_mobile_home">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe6" edge="1" parent="1" source="f_mobile_home" style="endArrow=block;html=1;rounded=0" target="f_mobile_action">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe7" edge="1" parent="1" source="f_mobile_action" style="endArrow=block;html=1;rounded=0" target="f_booking" value="Booking">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe8" edge="1" parent="1" source="f_booking" style="endArrow=block;html=1;rounded=0" target="f_upload">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe9" edge="1" parent="1" source="f_upload" style="endArrow=block;html=1;rounded=0" target="f_wait">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe10" edge="1" parent="1" source="f_wait" style="endArrow=block;html=1;rounded=0" target="f_paid" value="Admin accept">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe11" edge="1" parent="1" source="f_paid" style="endArrow=block;html=1;rounded=0" target="f_scan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe12" edge="1" parent="1" source="f_mobile_action" style="endArrow=block;html=1;rounded=0" target="f_mobile_other" value="Riwayat / Navigasi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe13" edge="1" parent="1" source="f_scan" style="endArrow=block;html=1;rounded=0" target="f_end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="575" y="1385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fe14" edge="1" parent="1" source="f_mobile_other" style="endArrow=block;html=1;rounded=0" target="f_end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="222" y="1385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fe15" edge="1" parent="1" source="f_admin_open" style="endArrow=block;html=1;rounded=0" target="f_admin_login">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe16" edge="1" parent="1" source="f_admin_login" style="endArrow=block;html=1;rounded=0" target="f_admin_dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe17" edge="1" parent="1" source="f_admin_dashboard" style="endArrow=block;html=1;rounded=0" target="f_admin_menu">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe18" edge="1" parent="1" source="f_admin_menu" style="endArrow=block;html=1;rounded=0" target="f_admin_verify" value="Booking">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe19" edge="1" parent="1" source="f_admin_menu" style="endArrow=block;html=1;rounded=0" target="f_admin_manage" value="Jalur / Pendaki">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe20" edge="1" parent="1" source="f_admin_menu" style="endArrow=block;html=1;rounded=0" target="f_admin_export" value="Laporan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe21" edge="1" parent="1" source="f_admin_verify" style="endArrow=block;html=1;rounded=0;" target="f_paid" value="Update status">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1115" y="1138" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fe22" edge="1" parent="1" source="f_admin_manage" style="endArrow=block;html=1;rounded=0" target="f_admin_menu">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1345" y="1030" />
+              <mxPoint x="1345" y="745" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fe23" edge="1" parent="1" source="f_admin_export" style="endArrow=block;html=1;rounded=0" target="f_end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1122" y="1385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="use-case" name="Use Case Diagram">
+    <mxGraphModel dx="1229" dy="693" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="uc_title" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" value="Use Case Diagram Sistem GoTrip" vertex="1">
+          <mxGeometry height="40" width="620" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_boundary" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;align=left;verticalAlign=top;spacingLeft=12;spacingTop=8" value="Sistem GoTrip" vertex="1">
+          <mxGeometry height="910" width="940" x="260" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_actor_user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Pendaki" vertex="1">
+          <mxGeometry height="120" width="70" x="90" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_actor_admin" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Admin" vertex="1">
+          <mxGeometry height="120" width="70" x="1320" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_actor_gps" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="GPS Perangkat" vertex="1">
+          <mxGeometry height="120" width="70" x="90" y="765" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_actor_weather" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Open-Meteo API" vertex="1">
+          <mxGeometry height="120" width="70" x="1320" y="765" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_register" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Registrasi pendaki" vertex="1">
+          <mxGeometry height="70" width="210" x="330" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_login_mobile" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Login mobile" vertex="1">
+          <mxGeometry height="70" width="210" x="330" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_routes" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Melihat daftar jalur" vertex="1">
+          <mxGeometry height="70" width="210" x="330" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_booking" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Booking pendakian" vertex="1">
+          <mxGeometry height="70" width="210" x="330" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_upload" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Upload bukti pembayaran" vertex="1">
+          <mxGeometry height="70" width="230" x="330" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_history" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Melihat riwayat booking" vertex="1">
+          <mxGeometry height="70" width="230" x="330" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_scan" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Scan check-in / check-out" vertex="1">
+          <mxGeometry height="70" width="230" x="330" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_nav" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Navigasi dan cuaca" vertex="1">
+          <mxGeometry height="70" width="230" x="610" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_login_admin" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Login web admin" vertex="1">
+          <mxGeometry height="70" width="210" x="910" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_dashboard" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Melihat dashboard" vertex="1">
+          <mxGeometry height="70" width="210" x="910" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_verify" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Verifikasi pembayaran" vertex="1">
+          <mxGeometry height="70" width="230" x="900" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_manage_routes" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Kelola jalur pendakian" vertex="1">
+          <mxGeometry height="70" width="230" x="900" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_manage_users" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Kelola data pendaki" vertex="1">
+          <mxGeometry height="70" width="230" x="900" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_barcodes" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Melihat barcode checkpoint" vertex="1">
+          <mxGeometry height="70" width="240" x="900" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_export" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Export laporan CSV / PDF" vertex="1">
+          <mxGeometry height="70" width="240" x="900" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_api_auth" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Validasi JWT dan role" vertex="1">
+          <mxGeometry height="70" width="220" x="615" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_payment_status" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Update status booking dan payment" vertex="1">
+          <mxGeometry height="80" width="240" x="610" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="uce1" edge="1" parent="1" source="uc_actor_user" style="endArrow=none;html=1;rounded=0" target="uc_register">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce2" edge="1" parent="1" source="uc_actor_user" style="endArrow=none;html=1;rounded=0" target="uc_login_mobile">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce3" edge="1" parent="1" source="uc_actor_user" style="endArrow=none;html=1;rounded=0" target="uc_routes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce4" edge="1" parent="1" source="uc_actor_user" style="endArrow=none;html=1;rounded=0" target="uc_booking">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce5" edge="1" parent="1" source="uc_actor_user" style="endArrow=none;html=1;rounded=0" target="uc_upload">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce6" edge="1" parent="1" source="uc_actor_user" style="endArrow=none;html=1;rounded=0" target="uc_history">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce7" edge="1" parent="1" source="uc_actor_user" style="endArrow=none;html=1;rounded=0" target="uc_scan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce8" edge="1" parent="1" source="uc_actor_user" style="endArrow=none;html=1;rounded=0" target="uc_nav">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce9" edge="1" parent="1" source="uc_actor_admin" style="endArrow=none;html=1;rounded=0" target="uc_login_admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce10" edge="1" parent="1" source="uc_actor_admin" style="endArrow=none;html=1;rounded=0" target="uc_dashboard">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce11" edge="1" parent="1" source="uc_actor_admin" style="endArrow=none;html=1;rounded=0" target="uc_verify">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce12" edge="1" parent="1" source="uc_actor_admin" style="endArrow=none;html=1;rounded=0" target="uc_manage_routes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce13" edge="1" parent="1" source="uc_actor_admin" style="endArrow=none;html=1;rounded=0" target="uc_manage_users">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce14" edge="1" parent="1" source="uc_actor_admin" style="endArrow=none;html=1;rounded=0" target="uc_barcodes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce15" edge="1" parent="1" source="uc_actor_admin" style="endArrow=none;html=1;rounded=0" target="uc_export">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce16" edge="1" parent="1" source="uc_booking" style="endArrow=open;html=1;rounded=0;dashed=1" target="uc_api_auth" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce17" edge="1" parent="1" source="uc_upload" style="endArrow=open;html=1;rounded=0;dashed=1" target="uc_payment_status" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce18" edge="1" parent="1" source="uc_verify" style="endArrow=open;html=1;rounded=0;dashed=1" target="uc_payment_status" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce19" edge="1" parent="1" source="uc_actor_gps" style="endArrow=none;html=1;rounded=0" target="uc_nav">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uce20" edge="1" parent="1" source="uc_actor_weather" style="endArrow=none;html=1;rounded=0" target="uc_nav">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="erd-database" name="ERD Database">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="980" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="erd_title" value="Entity Relationship Diagram Database GoTrip" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="760" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="erd_users" value="&lt;b&gt;users&lt;/b&gt;&lt;br&gt;PK id : uint&lt;br&gt;name : string&lt;br&gt;email : string unique&lt;br&gt;password : string&lt;br&gt;phone : string&lt;br&gt;nik : string unique&lt;br&gt;role : varchar(20)&lt;br&gt;check_in : bool&lt;br&gt;check_out : bool&lt;br&gt;check_in_at : timestamp nullable&lt;br&gt;check_out_at : timestamp nullable&lt;br&gt;created_at : timestamp" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#047857;align=left;verticalAlign=top;spacing=10;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="90" y="170" width="305" height="335" as="geometry" />
+        </mxCell>
+        <mxCell id="erd_routes" value="&lt;b&gt;hiking_routes&lt;/b&gt;&lt;br&gt;PK id : int&lt;br&gt;route_name : varchar(120)&lt;br&gt;description : text&lt;br&gt;is_open : bool&lt;br&gt;closed_reason : text nullable&lt;br&gt;created_at : timestamp&lt;br&gt;updated_at : timestamp" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;align=left;verticalAlign=top;spacing=10;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="90" y="590" width="305" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="erd_bookings" value="&lt;b&gt;bookings&lt;/b&gt;&lt;br&gt;PK id : uuid&lt;br&gt;FK user_id : users.id&lt;br&gt;FK route_id : hiking_routes.id&lt;br&gt;route_name : string&lt;br&gt;booking_date : date&lt;br&gt;hiking_date : date&lt;br&gt;total_members : int&lt;br&gt;total_price : float&lt;br&gt;include_ojek : bool&lt;br&gt;ojek_count : int&lt;br&gt;status : varchar(40)&lt;br&gt;reject_note : text nullable&lt;br&gt;checked_in_at : timestamp nullable&lt;br&gt;checked_out_at : timestamp nullable&lt;br&gt;created_at : timestamp&lt;br&gt;updated_at : timestamp" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;align=left;verticalAlign=top;spacing=10;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="590" y="250" width="360" height="445" as="geometry" />
+        </mxCell>
+        <mxCell id="erd_payments" value="&lt;b&gt;payments&lt;/b&gt;&lt;br&gt;PK id : uuid&lt;br&gt;FK booking_id : bookings.id unique&lt;br&gt;FK user_id : users.id&lt;br&gt;method : string&lt;br&gt;proof_image : string&lt;br&gt;status : varchar(40)&lt;br&gt;reject_note : text nullable&lt;br&gt;verified_at : timestamp nullable&lt;br&gt;created_at : timestamp&lt;br&gt;updated_at : timestamp" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;align=left;verticalAlign=top;spacing=10;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="1105" y="330" width="315" height="315" as="geometry" />
+        </mxCell>
+        <mxCell id="erd_note" value="Catatan: admin dan pendaki berada pada tabel users, dibedakan melalui field role. File bukti bayar disimpan di folder uploads, sedangkan path-nya disimpan pada payments.proof_image." style="shape=note;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#64748B" vertex="1" parent="1">
+          <mxGeometry x="1080" y="120" width="340" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="erde1" value="1 memiliki N" edge="1" parent="1" source="erd_users" target="erd_bookings" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="erde2" value="1 dipilih N" edge="1" parent="1" source="erd_routes" target="erd_bookings" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="erde3" value="1 memiliki 1" edge="1" parent="1" source="erd_bookings" target="erd_payments" style="endArrow=ERone;startArrow=ERone;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="erde4" value="1 melakukan N" edge="1" parent="1" source="erd_users" target="erd_payments" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;dashed=1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="245" y="95" />
+              <mxPoint x="1262" y="95" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="class-diagram" name="Class Diagram">
+    <mxGraphModel dx="1720" dy="1038" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1050" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cl_title" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" value="Class Diagram Backend GoTrip" vertex="1">
+          <mxGeometry height="40" width="650" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_user" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;User&lt;/b&gt;&lt;hr&gt;+ id: uint&lt;br&gt;+ name: string&lt;br&gt;+ email: string&lt;br&gt;+ password: string&lt;br&gt;+ phone: string&lt;br&gt;+ nik: string&lt;br&gt;+ role: string&lt;br&gt;+ checkIn: bool&lt;br&gt;+ checkOut: bool&lt;br&gt;+ checkInAt: *Time&lt;br&gt;+ checkOutAt: *Time&lt;hr&gt;+ toResponse(): UserResponse" vertex="1">
+          <mxGeometry height="315" width="290" x="70" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_route" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;HikingRoute&lt;/b&gt;&lt;hr&gt;+ id: int&lt;br&gt;+ routeName: string&lt;br&gt;+ description: string&lt;br&gt;+ isOpen: bool&lt;br&gt;+ closedReason: string&lt;br&gt;+ createdAt: Time&lt;br&gt;+ updatedAt: Time&lt;hr&gt;+ TableName(): string" vertex="1">
+          <mxGeometry height="250" width="290" x="70" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_booking" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;Booking&lt;/b&gt;&lt;hr&gt;+ id: uuid&lt;br&gt;+ userId: uint&lt;br&gt;+ routeId: int&lt;br&gt;+ routeName: string&lt;br&gt;+ bookingDate: Time&lt;br&gt;+ hikingDate: Time&lt;br&gt;+ totalMembers: int&lt;br&gt;+ totalPrice: float64&lt;br&gt;+ includeOjek: bool&lt;br&gt;+ ojekCount: int&lt;br&gt;+ status: string&lt;br&gt;+ rejectNote: *string&lt;br&gt;+ checkedInAt: *Time&lt;br&gt;+ checkedOutAt: *Time&lt;br&gt;+ payment: *Payment&lt;hr&gt;+ BeforeCreate(tx): error&lt;br&gt;+ TableName(): string" vertex="1">
+          <mxGeometry height="430" width="340" x="505" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_payment" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;Payment&lt;/b&gt;&lt;hr&gt;+ id: uuid&lt;br&gt;+ bookingId: uuid&lt;br&gt;+ userId: uint&lt;br&gt;+ method: string&lt;br&gt;+ proofImage: string&lt;br&gt;+ status: string&lt;br&gt;+ rejectNote: *string&lt;br&gt;+ verifiedAt: *Time&lt;br&gt;+ createdAt: Time&lt;br&gt;+ updatedAt: Time&lt;hr&gt;+ BeforeCreate(tx): error&lt;br&gt;+ TableName(): string" vertex="1">
+          <mxGeometry height="295" width="340" x="505" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_auth" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;AuthController&lt;/b&gt;&lt;hr&gt;+ Register()&lt;br&gt;+ Login()&lt;br&gt;+ RegisterAdmin()&lt;br&gt;+ InitAdmin()" vertex="1">
+          <mxGeometry height="160" width="300" x="1030" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_ticket_ctrl" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;TicketController&lt;/b&gt;&lt;hr&gt;+ CreateBooking()&lt;br&gt;+ GetBookings()&lt;br&gt;+ GetAllBookingsAdmin()&lt;br&gt;+ UploadProof()" vertex="1">
+          <mxGeometry height="160" width="300" x="1030" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_payment_ctrl" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;PaymentController&lt;/b&gt;&lt;hr&gt;+ AdminVerifyPayment()&lt;br&gt;+ AdminUploadProof()" vertex="1">
+          <mxGeometry height="130" width="300" x="1030" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_route_ctrl" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;RouteController&lt;/b&gt;&lt;hr&gt;+ GetHikingRoutes()&lt;br&gt;+ UpdateHikingRouteStatus()" vertex="1">
+          <mxGeometry height="130" width="300" x="1030" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_checkpoint" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10" value="&lt;b&gt;CheckpointController&lt;/b&gt;&lt;hr&gt;+ GetBarcodes()&lt;br&gt;+ ScanBarcode()" vertex="1">
+          <mxGeometry height="120" width="300" x="1030" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="cle1" edge="1" parent="1" source="cl_user" style="endArrow=none;html=1;rounded=0" target="cl_booking" value="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cle2" edge="1" parent="1" source="cl_route" style="endArrow=none;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="cl_booking" value="N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cle3" edge="1" parent="1" source="cl_booking" style="endArrow=diamondThin;startArrow=none;html=1;rounded=0" target="cl_payment" value="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cle4" edge="1" parent="1" source="cl_auth" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;" target="cl_user" value="uses">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1180" y="130" />
+              <mxPoint x="450" y="130" />
+              <mxPoint x="450" y="303" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cle5" edge="1" parent="1" source="cl_ticket_ctrl" style="endArrow=open;html=1;rounded=0;dashed=1" target="cl_booking" value="uses">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cle6" edge="1" parent="1" source="cl_ticket_ctrl" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;" target="cl_payment" value="uses">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="890" y="420" />
+              <mxPoint x="890" y="848" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cle7" edge="1" parent="1" source="cl_payment_ctrl" style="endArrow=open;html=1;rounded=0;dashed=1" target="cl_payment" value="uses">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cle8" edge="1" parent="1" source="cl_route_ctrl" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;" target="cl_route" value="uses">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="890" y="785" />
+              <mxPoint x="890" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cle9" edge="1" parent="1" source="cl_checkpoint" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;" target="cl_booking" value="updates">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="870" y="955" />
+              <mxPoint x="870" y="385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cle10" edge="1" parent="1" source="cl_checkpoint" style="endArrow=open;html=1;rounded=0;dashed=1;edgeStyle=orthogonalEdgeStyle;" target="cl_user" value="updates">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1180" y="1020" />
+              <mxPoint x="40" y="1020" />
+              <mxPoint x="40" y="303" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="component-architecture" name="Component Architecture">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ca_title" value="Component Architecture GoTrip" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="650" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_mobile" value="Aplikasi Mobile Flutter&lt;br&gt;Pendaki" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="85" y="160" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_getstorage" value="GetStorage&lt;br&gt;token dan profil" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#EEF2FF;strokeColor=#4F46E5" vertex="1" parent="1">
+          <mxGeometry x="95" y="315" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_gps" value="GPS Perangkat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#475569" vertex="1" parent="1">
+          <mxGeometry x="95" y="465" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_admin" value="Web Admin React&lt;br&gt;Browser Admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="85" y="635" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_localstorage" value="localStorage&lt;br&gt;authToken dan user" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#FFF7ED;strokeColor=#EA580C" vertex="1" parent="1">
+          <mxGeometry x="95" y="775" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_api" value="Backend API Go/Gin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDFA;strokeColor=#0F766E;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="460" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_mw" value="AuthMiddleware&lt;br&gt;RoleMiddleware(admin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEFCE8;strokeColor=#CA8A04" vertex="1" parent="1">
+          <mxGeometry x="570" y="185" width="320" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_auth" value="Auth Controller&lt;br&gt;register, login, register admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#047857" vertex="1" parent="1">
+          <mxGeometry x="570" y="305" width="320" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_ticket" value="Ticket Controller&lt;br&gt;booking, history, upload proof" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#047857" vertex="1" parent="1">
+          <mxGeometry x="570" y="410" width="320" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_payment" value="Payment Controller&lt;br&gt;verify accept / reject" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#047857" vertex="1" parent="1">
+          <mxGeometry x="570" y="515" width="320" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_route" value="Route, User, Dashboard, Export, Checkpoint Controllers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#047857" vertex="1" parent="1">
+          <mxGeometry x="570" y="620" width="320" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_db" value="PostgreSQL&lt;br&gt;users, hiking_routes, bookings, payments" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#F8FAFC;strokeColor=#475569;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1120" y="230" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_uploads" value="Folder uploads&lt;br&gt;bukti pembayaran" style="shape=folder;whiteSpace=wrap;html=1;tabWidth=80;tabHeight=20;fillColor=#FEF2F2;strokeColor=#DC2626;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1120" y="445" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ca_weather" value="Open-Meteo API&lt;br&gt;cuaca Sumbing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#475569;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1120" y="650" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cae1" value="REST JSON + JWT" edge="1" parent="1" source="ca_mobile" target="ca_api" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cae2" value="simpan token" edge="1" parent="1" source="ca_mobile" target="ca_getstorage" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cae3" value="koordinat" edge="1" parent="1" source="ca_gps" target="ca_mobile" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cae4" value="REST JSON + JWT" edge="1" parent="1" source="ca_admin" target="ca_api" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cae5" value="simpan sesi" edge="1" parent="1" source="ca_admin" target="ca_localstorage" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cae6" value="query dan transaksi" edge="1" parent="1" source="ca_api" target="ca_db" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cae7" value="simpan / serve file" edge="1" parent="1" source="ca_api" target="ca_uploads" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cae8" value="forecast cuaca" edge="1" parent="1" source="ca_mobile" target="ca_weather" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="215" y="90" />
+              <mxPoint x="1270" y="90" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="dad-context" name="DAD Konteks">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="dad_title" value="Diagram Arus Data Konteks GoTrip" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="720" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dad_pendaki" value="Pendaki Mobile" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="160" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dad_admin" value="Admin Web" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="560" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dad_system" value="Sistem GoTrip" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F0FDFA;strokeColor=#0F766E;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="600" y="320" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="dad_db" value="PostgreSQL&lt;br&gt;gotrip_db" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#F8FAFC;strokeColor=#475569;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1150" y="160" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="dad_uploads" value="Folder uploads" style="shape=folder;whiteSpace=wrap;html=1;tabWidth=80;tabHeight=20;fillColor=#FEF2F2;strokeColor=#DC2626;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1150" y="350" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="dad_weather" value="Open-Meteo API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#475569;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1150" y="555" width="250" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dad_gps" value="GPS Perangkat" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#475569;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="615" y="660" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dade1" value="registrasi, login, booking, bukti bayar, scan" edge="1" parent="1" source="dad_pendaki" target="dad_system" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dade2" value="token, jalur, status booking, hasil scan" edge="1" parent="1" source="dad_system" target="dad_pendaki" style="endArrow=block;html=1;rounded=0;dashed=1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dade3" value="login, verifikasi, kelola jalur, laporan" edge="1" parent="1" source="dad_admin" target="dad_system" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dade4" value="dashboard, booking, pendaki, export" edge="1" parent="1" source="dad_system" target="dad_admin" style="endArrow=block;html=1;rounded=0;dashed=1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dade5" value="baca / tulis data" edge="1" parent="1" source="dad_system" target="dad_db" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dade6" value="file bukti bayar" edge="1" parent="1" source="dad_system" target="dad_uploads" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dade7" value="permintaan cuaca" edge="1" parent="1" source="dad_system" target="dad_weather" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dade8" value="koordinat lokasi" edge="1" parent="1" source="dad_gps" target="dad_system" style="endArrow=block;html=1;rounded=0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="sequence-booking-verification" name="Sequence Booking Verifikasi">
+    <mxGraphModel dx="1911" dy="1153" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2050" pageHeight="1650" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sq_title" parent="1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" value="Sequence Diagram Booking dan Verifikasi Pembayaran GoTrip" vertex="1">
+          <mxGeometry height="40" width="920" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_p_user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Pendaki" vertex="1">
+          <mxGeometry height="55" width="150" x="45" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_p_mobile" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Mobile Flutter" vertex="1">
+          <mxGeometry height="55" width="180" x="285" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_p_api" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Backend API" vertex="1">
+          <mxGeometry height="55" width="180" x="560" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_p_ticket" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Ticket Controller" vertex="1">
+          <mxGeometry height="55" width="200" x="835" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_p_db" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="PostgreSQL" vertex="1">
+          <mxGeometry height="55" width="180" x="1145" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_p_uploads" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Uploads" vertex="1">
+          <mxGeometry height="55" width="170" x="1415" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_p_admin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1" value="Web Admin" vertex="1">
+          <mxGeometry height="55" width="180" x="1685" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_l_user" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="150" as="sourcePoint" />
+            <mxPoint x="120" y="1550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sq_l_mobile" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="375" y="150" as="sourcePoint" />
+            <mxPoint x="375" y="1550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sq_l_api" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="150" as="sourcePoint" />
+            <mxPoint x="650" y="1550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sq_l_ticket" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="935" y="150" as="sourcePoint" />
+            <mxPoint x="935" y="1550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sq_l_db" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1235" y="150" as="sourcePoint" />
+            <mxPoint x="1235" y="1550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sq_l_uploads" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1500" y="150" as="sourcePoint" />
+            <mxPoint x="1500" y="1550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sq_l_admin" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1775" y="150" as="sourcePoint" />
+            <mxPoint x="1775" y="1550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sq_frame1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6" value="1. Booking Tiket" vertex="1">
+          <mxGeometry height="420" width="1850" x="35" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_frame2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6" value="2. Upload bukti pembayaran" vertex="1">
+          <mxGeometry height="350" width="1850" x="35" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="sq_frame3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6" value=" " vertex="1">
+          <mxGeometry height="390" width="1850" x="35" y="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="sqm1" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Pilih jalur, tanggal, anggota, ojek">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="240" as="sourcePoint" />
+            <mxPoint x="375" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm2" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="POST /api/bookings + Bearer token">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="375" y="295" as="sourcePoint" />
+            <mxPoint x="650" y="295" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm3" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="AuthMiddleware lalu CreateBooking">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="350" as="sourcePoint" />
+            <mxPoint x="935" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm4" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Cek hiking_routes">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="935" y="405" as="sourcePoint" />
+            <mxPoint x="1235" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm5" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Transaction: simpan booking pending dan payment pending">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="935" y="460" as="sourcePoint" />
+            <mxPoint x="1235" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm6" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;dashed=1;" value="Detail booking + payment">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1235" y="525" as="sourcePoint" />
+            <mxPoint x="375" y="525" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm7" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;dashed=1;" value="Tampilkan halaman upload bukti">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="375" y="575" as="sourcePoint" />
+            <mxPoint x="120" y="575" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm8" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Pilih metode bayar dan gambar bukti">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="705" as="sourcePoint" />
+            <mxPoint x="375" y="705" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm9" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="PATCH /api/bookings/:id/proof multipart">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="375" y="765" as="sourcePoint" />
+            <mxPoint x="650" y="765" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm10" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="UploadProof">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="820" as="sourcePoint" />
+            <mxPoint x="935" y="820" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm11" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Simpan proof_image">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="935" y="875" as="sourcePoint" />
+            <mxPoint x="1500" y="875" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm12" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Update booking dan payment waiting_verification">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="935" y="930" as="sourcePoint" />
+            <mxPoint x="1235" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm13" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;dashed=1;" value="Menunggu verifikasi admin">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="935" y="975" as="sourcePoint" />
+            <mxPoint x="120" y="975" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm14" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Buka daftar booking">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1775" y="1095" as="sourcePoint" />
+            <mxPoint x="650" y="1095" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm15" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="GET /api/web-admin/bookings">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="1150" as="sourcePoint" />
+            <mxPoint x="935" y="1150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm16" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Preload payment dan user">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="935" y="1205" as="sourcePoint" />
+            <mxPoint x="1235" y="1205" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm17" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;dashed=1;" value="List booking + bukti bayar">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1235" y="1260" as="sourcePoint" />
+            <mxPoint x="1775" y="1260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm18" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="Accept atau reject">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1775" y="1320" as="sourcePoint" />
+            <mxPoint x="650" y="1320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm19" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;strokeWidth=1.2" value="PUT /api/web-admin/verify-payment/:id">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="1375" as="sourcePoint" />
+            <mxPoint x="1235" y="1375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sqm20" edge="1" parent="1" style="endArrow=block;html=1;rounded=0;dashed=1;" value="Status booking/payment paid atau rejected">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1235" y="1420" as="sourcePoint" />
+            <mxPoint x="1775" y="1420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="deployment" name="Deployment Diagram">
+    <mxGraphModel dx="1433" dy="808" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="dp_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=24;fontStyle=1" value="Deployment Diagram GoTrip" vertex="1">
+          <mxGeometry height="40" width="580" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dp_phone" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;align=left;verticalAlign=top;spacing=12;fontSize=14" value="&lt;b&gt;Smartphone Pendaki&lt;/b&gt;&lt;br&gt;&lt;br&gt;Flutter Mobile App&lt;br&gt;GetStorage&lt;br&gt;Camera / Scanner&lt;br&gt;GPS" vertex="1">
+          <mxGeometry height="215" width="300" x="75" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="dp_browser" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;align=left;verticalAlign=top;spacing=12;fontSize=14" value="&lt;b&gt;Browser Admin&lt;/b&gt;&lt;br&gt;&lt;br&gt;React Web Admin&lt;br&gt;localStorage&lt;br&gt;Export CSV/PDF" vertex="1">
+          <mxGeometry height="190" width="300" x="75" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="dp_server" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F0FDFA;strokeColor=#0F766E;align=left;verticalAlign=top;spacing=12;fontSize=14" value="&lt;b&gt;Application Server&lt;/b&gt;&lt;br&gt;&lt;br&gt;Go/Gin Backend API&lt;br&gt;AuthMiddleware&lt;br&gt;Controllers&lt;br&gt;Static /uploads route&lt;br&gt;JWT validation" vertex="1">
+          <mxGeometry height="300" width="340" x="585" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="6r8RQRD3x_uMBAmEyksq-1" edge="1" parent="1" source="dp_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dp_files" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dp_db" parent="1" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#F8FAFC;strokeColor=#475569;align=center;fontSize=14" value="&lt;b&gt;Database Server&lt;/b&gt;&lt;br&gt;&lt;br&gt;PostgreSQL&lt;br&gt;users&lt;br&gt;hiking_routes&lt;br&gt;bookings&lt;br&gt;payments" vertex="1">
+          <mxGeometry height="180" width="300" x="1110" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="dp_files" parent="1" style="shape=folder;whiteSpace=wrap;html=1;tabWidth=90;tabHeight=22;fillColor=#FEF2F2;strokeColor=#DC2626;align=center;fontSize=14" value="&lt;b&gt;File Storage&lt;/b&gt;&lt;br&gt;&lt;br&gt;Folder uploads&lt;br&gt;Bukti pembayaran&lt;br&gt;File laporan sementara" vertex="1">
+          <mxGeometry height="150" width="300" x="1110" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="dp_weather" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#475569;align=center;fontSize=14" value="&lt;b&gt;External Service&lt;/b&gt;&lt;br&gt;&lt;br&gt;Open-Meteo API" vertex="1">
+          <mxGeometry height="110" width="300" x="1110" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="dpe1" edge="1" parent="1" source="dp_phone" style="endArrow=block;html=1;rounded=0" target="dp_server" value="HTTPS / REST JSON / JWT">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dpe2" edge="1" parent="1" source="dp_browser" style="endArrow=block;html=1;rounded=0" target="dp_server" value="HTTPS / REST JSON / JWT">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dpe3" edge="1" parent="1" source="dp_server" style="endArrow=block;html=1;rounded=0" target="dp_db" value="SQL connection">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dpe4" edge="1" parent="1" source="dp_server" style="endArrow=block;html=1;rounded=0" target="dp_files" value="read/write proof image">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dpe5" edge="1" parent="1" source="dp_phone" style="endArrow=block;html=1;rounded=0" target="dp_weather" value="weather request">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="225" y="830" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
