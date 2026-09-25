@@ -229,48 +229,7 @@ aplikasi/
    flutter run
    ```
 
----
-
-## 🔐 Variabel Lingkungan (Environment Variables)
-
-### Konfigurasi Backend (`gotrip-backend/.env`)
-
-| Variabel | Deskripsi | Nilai Contoh |
-| :--- | :--- | :--- |
-| `DATABASE_DSN` | DSN koneksi PostgreSQL lengkap | `host=localhost user=postgres password=secret dbname=gotrip_db port=5432 sslmode=disable` |
-| `DB_HOST` | Host database (fallback) | `localhost` |
-| `DB_PORT` | Port database (fallback) | `5432` |
-| `DB_USER` | Username PostgreSQL | `postgres` |
-| `DB_PASSWORD` | Password PostgreSQL | `secret` |
-| `DB_NAME` | Nama database | `gotrip_db` |
-| `JWT_SECRET` | Kunci rahasia signing token JWT | `your-secret-key-gotrip-2025` |
-| `MIDTRANS_SERVER_KEY` | Server Key Midtrans | `SB-Mid-server-xxxx` |
-| `MIDTRANS_CLIENT_KEY` | Client Key Midtrans | `SB-Mid-client-xxxx` |
-| `MIDTRANS_ENVIRONMENT` | Lingkungan Midtrans (`sandbox` / `production`) | `sandbox` |
-| `MIDTRANS_NOTIFICATION_URL` | URL endpoint Webhook penerima status Midtrans | `https://yourdomain.com/api/payments/webhook` |
-| `APP_BASE_URL` | Base URL server backend | `http://localhost:8080` |
-
----
-
-## 📊 Dokumentasi & Diagram Teknis
-
-Diagram alur sistem, rancangan basis data, dan interaksi aktor telah didokumentasikan secara rinci di dalam direktori [`docs/`](./docs/):
-- **Activity Diagram**: [docs/activity-diagram-dad.md](./docs/activity-diagram-dad.md)
-- **Sequence Diagram User**: [docs/sequence-diagram-user.md](./docs/sequence-diagram-user.md)
-- **Diagram DrawIO Arsitektur**: `docs/gotrip-bab4-diagrams.drawio`
-
----
-
-## 🛡️ Keamanan & Praktik Terbaik
-
-- **Jangan Pernah Mengunggah File `.env`**: File konfigurasi `.env` berisi rahasia database dan API key. File ini telah dikecualikan di `.gitignore`. Selalu gunakan `.env.example` saat berbagi konfigurasi.
-- **Folder `uploads/`**: File bukti transfer dan barcode pengguna dikelola secara lokal pada runtime server dan tidak dilacak di repositori publik demi privasi dan efisiensi ukuran repositori.
-- **Keamanan Token**: Seluruh endpoint transaksi dan data pengguna dilindungi menggunakan header `Authorization: Bearer <token>`.
-
----
-
 ## 👨‍💻 Kontributor & Lisensi
 
 Proyek ini dikembangkan oleh **[muhammadmuslim03](https://github.com/muhammadmuslim03)** untuk penelitian dan pengembangan sistem informasi pendakian gunung.
-
 Didistribusikan di bawah lisensi terbuka untuk keperluan edukasi dan pengembangan profesional.

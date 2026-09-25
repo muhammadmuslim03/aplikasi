@@ -2,7 +2,8 @@
 .env
 *.env
 .env.*
-!.env.example
+.env.example
+*.env.example
 
 # Runtime uploads & generated export files
 gotrip-backend/uploads/*
