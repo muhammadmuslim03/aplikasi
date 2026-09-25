@@ -1,0 +1,53 @@
+# Environment variables (JANGAN PERNAH DI-COMMIT)
+.env
+*.env
+.env.*
+!.env.example
+
+# Runtime uploads & generated export files
+gotrip-backend/uploads/*
+!gotrip-backend/uploads/.gitkeep
+gotrip-backend/*.pdf
+gotrip-backend/*.csv
+
+# Operating System files
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*~
+
+# IDE & Editor files
+.idea/
+.codex/
+.agents/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Go build artifacts
+gotrip-backend/gotrip-backend
+gotrip-backend/*.exe
+gotrip-backend/*.test
+gotrip-backend/*.out
+
+# Node / Vite build artifacts (Web Admin)
+gotrip-admin/node_modules/
+gotrip-admin/dist/
+gotrip-admin/dist-ssr/
+gotrip-admin/*.local
+gotrip-admin/npm-debug.log*
+gotrip-admin/yarn-debug.log*
+gotrip-admin/yarn-error.log*
+gotrip-admin/pnpm-debug.log*
+
+# Flutter / Dart build artifacts (Mobile App)
+gotrip/.dart_tool/
+gotrip/.flutter-plugins
+gotrip/.flutter-plugins-dependencies
+gotrip/.packages
+gotrip/build/
+gotrip/android/.gradle/
+gotrip/android/local.properties
+gotrip/ios/.symlinks/
+gotrip/ios/Pods/
