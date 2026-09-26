@@ -1,4 +1,4 @@
-# 🏔️ GoTrip - Sistem Reservasi & Navigasi Pendakian Gunung Terintegrasi
+GoTrip - Sistem Reservasi & Navigasi Pendakian Gunung Terintegrasi
 
 <div align="center">
 
@@ -17,7 +17,7 @@
 
 ---
 
-## 📌 Daftar Isi
+## Daftar Isi
 
 1. [Tentang Proyek](#-tentang-proyek)
 2. [Arsitektur Sistem](#-arsitektur-sistem)
@@ -36,7 +36,7 @@
 
 ---
 
-## 📖 Tentang Proyek
+## Tentang Proyek
 
 **GoTrip** adalah platform ekosistem pendakian gunung yang menghubungkan antara pendaki gunung dan pihak pengelola *basecamp*. Sistem ini bertujuan untuk mengatasi permasalahan registrasi manual, antrean di pos registrasi, validasi bukti transfer manual, pemantauan keselamatan pendaki di jalur, serta pencatatan keluar-masuk pendaki secara real-time.
 
@@ -48,7 +48,7 @@ Proyek ini dibangun secara modular dalam satu repositori (*monorepo*) yang menca
 
 ---
 
-## 🏗️ Arsitektur Sistem
+## Arsitektur Sistem
 
 ```mermaid
 graph TD
@@ -57,13 +57,13 @@ graph TD
     end
 
     subgraph Klien Pengelola
-        B[💻 GoTrip Admin Dashboard - React/Vite]
+        B[GoTrip Admin Dashboard - React/Vite]
     end
 
     subgraph Server & Layanan
-        C[⚙️ GoTrip Backend API - Go / Gin]
-        D[(🗄️ PostgreSQL Database)]
-        E[💳 Payment Gateway - Midtrans Snap]
+        C[GoTrip Backend API - Go / Gin]
+        D[(PostgreSQL Database)]
+        E[Payment Gateway - Midtrans Snap]
     end
 
     A -->|REST API + JWT| C
@@ -75,9 +75,9 @@ graph TD
 
 ---
 
-## ✨ Fitur Utama
+## Fitur Utama
 
-### 📱 1. GoTrip Mobile App (Pendaki)
+### 1. GoTrip Mobile App (Pendaki)
 - **Autentikasi & Profil**: Registrasi akun pendaki, login JWT, dan manajemen data diri pendaki.
 - **Reservasi Tiket Pendakian**: Pemilihan tanggal pendakian, jumlah anggota tim, serta pemilihan pos rute (Gunung Sumbing).
 - **Pembayaran Fleksibel**:
@@ -87,14 +87,14 @@ graph TD
 - **Navigasi & Jalur GPS**: Peta interaktif jalur pendakian (*offline-ready*) dengan panduan titik pos (*waypoints*) dan koordinat GPS.
 - **Riwayat & Informasi Cuaca**: Riwayat pemesanan tiket dan widget informasi perkiraan cuaca pendakian.
 
-### 💻 2. GoTrip Admin Dashboard (Pengelola Basecamp)
+### 2. GoTrip Admin Dashboard (Pengelola Basecamp)
 - **Ringkasan Dashboard**: Grafik statistik jumlah pendaki harian/bulanan dan rekap pendapatan.
 - **Verifikasi Pembayaran**: Tinjau bukti transfer manual, setujui atau tolak pembayaran dengan alasan.
 - **Check-in & Check-out Scanner**: Pemindaian barcode tiket pendaki di pos masuk dan pos keluar untuk memastikan keselamatan pendaki.
 - **Manajemen Jalur & Pos**: Pengelolaan kuota harian, status buka/tutup jalur pendakian.
 - **Ekspor Laporan**: Fitur unduh laporan pemesanan dan tiket dalam format **PDF** dan **CSV**.
 
-### ⚙️ 3. GoTrip Backend API
+### 3. GoTrip Backend API
 - **High Performance API**: Dibangun dengan Go 1.24 dan Gin framework yang ringan dan cepat.
 - **Otorisasi Berbasis Peran (RBAC)**: Middleware pemisah akses antara role `pendaki` dan `admin`.
 - **Keamanan Data**: Hashing password menggunakan `bcrypt` dan token otorisasi `JWT`.
@@ -103,7 +103,7 @@ graph TD
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 | Komponen | Bahasa / Framework | Pustaka Utama |
 | :--- | :--- | :--- |
@@ -115,7 +115,7 @@ graph TD
 
 ---
 
-## 📁 Struktur Direktori Repositori
+## Struktur Direktori Repositori
 
 ```text
 aplikasi/
@@ -155,7 +155,7 @@ aplikasi/
 
 ---
 
-## 🚀 Panduan Instalasi & Menjalankan
+## Panduan Instalasi & Menjalankan
 
 ### Persyaratan Sistem
 - **Go**: Versi 1.24 atau lebih baru
@@ -229,7 +229,7 @@ aplikasi/
    flutter run
    ```
 
-## 👨‍💻 Kontributor & Lisensi
+## Kontributor & Lisensi
 
 Proyek ini dikembangkan oleh **[muhammadmuslim03](https://github.com/muhammadmuslim03)** untuk penelitian dan pengembangan sistem informasi pendakian gunung.
 Didistribusikan di bawah lisensi terbuka untuk keperluan edukasi dan pengembangan profesional.
