@@ -1,4 +1,4 @@
-GoTrip - Sistem Reservasi & Navigasi Pendakian Gunung Terintegrasi
+# GoTrip - Sistem Reservasi & Navigasi Pendakian Gunung Terintegrasi
 
 <div align="center">
 
